@@ -1,3 +1,4 @@
+const productModel = require('../models/productModel');
 const ProductModel = require('../models/productModel');
 
 // upload product
@@ -72,4 +73,69 @@ const deleteProductController = async(req, res)=>{
       }
 }
 
-module.exports = {uploadProductController, allProductsController, updateProductController, deleteProductController}
+// totalProductCountController
+const totalProductCountController = async(req, res)=>{
+    try {
+        const toatalProductCount = await ProductModel.find({}).estimatedDocumentCount();
+        res.send({
+            success:true,
+            toatalProductCount
+        });
+    } catch (error) {
+        res.send({
+            success:false,
+            message:'Error while getting product count'
+        })
+        console.log(error);
+    }
+}
+
+// pagination
+const productPaginationHandler = async(req, res)=>{
+    const {paginationCategory, paginationPageNumber} = req.body;
+    const numberOfSkipProduct = (paginationPageNumber-1)*12;
+    let productCategory = {category:''}
+    if(paginationCategory==='all'){
+        productCategory = {}
+    }
+
+    else{
+     productCategory = {category:paginationCategory}
+    }
+
+    const paginatedProductList = await productModel.find(productCategory).skip(numberOfSkipProduct).limit(12).sort({createdAt:-1});
+
+    res.json(paginatedProductList)
+    
+    try {
+        
+    } catch (error) {
+        res.send({
+            success:false,
+            message:'Error while paginating product'
+        })
+        console.log(error);
+    }
+}
+
+// productCountByCategoryController
+const productCountByCategoryController = async(req,res)=>{
+    try {
+        let productCategory = {category:''}
+    if(req.params.category==='all'){
+        productCategory = {}
+    }
+    else{
+     productCategory = {category:req.params.category}
+    }
+    const toatalProduct = await ProductModel.find(productCategory);
+    res.send({
+        success:true,
+        toatalProduct:toatalProduct.length
+    });
+    } catch (error) {
+        
+    }
+}
+
+module.exports = {uploadProductController, allProductsController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController}

@@ -31,6 +31,7 @@ const UploadProduct = ({getAllProducts}) => {
 
   // handle upload image
   const handleUploadImage = async(e)=>{
+    if(!e.target.files[0]) return;
    const imgData = e.target.files[0];
    const cloudinaryRes = await uploadImageCloudinary(imgData);
    setproductDetails((prev)=>{
@@ -85,7 +86,14 @@ const UploadProduct = ({getAllProducts}) => {
 
 // showZoomProductHandler
 const showZoomProductHandler = (e)=>{
-  setZoomProductUrl(e.target.src);
+  let imgUrl = '';
+  if(e.target.src){
+    imgUrl = e.target.src;
+  }
+  else{
+    imgUrl = e.target.firstElementChild.src;
+  }
+  setZoomProductUrl(imgUrl);
   setBg({...bg, showZoomProduct:true});
 }
 
@@ -159,8 +167,8 @@ const handleCloseUploadProduct = ()=>[
                    productDetails?.productImage.length?
                    (<div className='flex flex-wrap gap-2'>
                      {productDetails?.productImage.map((url, index)=>{
-                     return <div className='w-[70px] h-[70px] relative group' key={index}>
-                         <img src={url} alt='pr-img' className='w-full h-full bg-slate-100 border cursor-pointer' onClick={showZoomProductHandler}/>
+                     return <div className='h-[70px] w-[70px] bg-slate-100 border p-1 cursor-pointer relative group' key={index} onClick={showZoomProductHandler}>
+                         <img src={url} alt='pr-img' className='h-full bg-slate-100 mx-auto'/>
 
                          <div className='absolute bottom-1 right-1 cursor-pointer hover:text-red-600 hidden group-hover:block' onClick={()=>handleRemoveProductImage(index)}>
                            <MdDelete />

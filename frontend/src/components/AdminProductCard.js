@@ -32,18 +32,20 @@ const AdminProductCard = ({data, callBack, getAllProducts}) => {
 
 
   return (
-    <div className='border border-slate-300 w-[145px] rounded-sm group shadow-sm'>
-        <img src={data?.productImage[0]} alt='admin-product-card' className='w-full h-[100px]'/>
+    <div className='border border-slate-300 w-[155px] rounded-sm group shadow-sm hover:border-slate-400 pt-1'>
+        <div className='h-[100px]'>
+        <img src={data?.productImage[0]} alt='admin-product-card' className='h-full mx-auto'/>
+        </div>
         <div className='p-2'>
         <hr/>
-        <p className='text-[14.5px] font-semibold text-[#FE4938]'>{data?.productName.length>14?data?.productName.substring(0, 15)+'...':data?.productName}</p>
+        <p className='text-[14.5px] font-semibold text-[#FE4938]'>{data?.productName.length>13?data?.productName.substring(0, 14)+'...':data?.productName}</p>
         <p className='text-sm text-[#2c2c54]'>&#8377;{new Intl.NumberFormat('en-IN', { minimumFractionDigits: 2 }).format(data?.sellingPrice)}</p>
 
-        <div className='flex items-center justify-between mt-1'>
-        <span className='w-fit bg-green-200 rounded-full p-1 hover:bg-green-500 hover:text-white cursor-pointer hidden group-hover:block' onClick={showUdateProductHandler}>
+        <div className='flex items-center justify-between'>
+        <span className='w-fit bg-green-100 rounded-full p-1 hover:bg-green-500 hover:text-white cursor-pointer' onClick={showUdateProductHandler}>
             <MdEdit/>
         </span>
-        <span className='w-fit bg-red-200 rounded-full p-1 hover:bg-red-500 hover:text-white cursor-pointer hidden group-hover:block' onClick={deleteProductHandler}>
+        <span className='w-fit bg-red-100 rounded-full p-1 hover:bg-red-500 hover:text-white cursor-pointer' onClick={deleteProductHandler}>
         <MdDeleteOutline />
         </span>
         </div>

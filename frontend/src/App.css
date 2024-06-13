@@ -115,3 +115,20 @@
   ::-webkit-scrollbar-thumb:hover {
     background: lightgray; 
   }
+
+
+  /* ================all-product-pagination=============== */
+  .all-product-pagination{
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    margin: auto;
+  }
+
+
+  .all-product-pagination td{
+    border: 1px solid #2c2c54;
+    padding: 2px 8px;
+  }

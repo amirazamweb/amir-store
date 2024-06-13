@@ -42,7 +42,7 @@ const AdminPanel = () => {
 
   return (
     ok?(
-      <div className='min-h-[calc(100vh-104px)] hidden lg:flex'>
+      <div className='min-h-[calc(100vh-104px)] hidden md:flex'>
       <aside className='min-h-full w-full max-w-60 bg-white customShadow relative'>
           <div className='h-40 flex justify-center items-center flex-col gap-[2px] bg-slate-200 adminCustoms'>
               <div>
