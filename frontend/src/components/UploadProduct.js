@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 
-const UploadProduct = ({getAllProducts}) => {
+const UploadProduct = ({getAllProducts, getProductCount}) => {
   const [productDetails, setproductDetails] = useState({
     productName:'',
     brandName:'',
@@ -74,6 +74,7 @@ const UploadProduct = ({getAllProducts}) => {
   try {
     const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/upload`, productDetails);
     if(data?.success){
+      getProductCount('all');
       getAllProducts();
       toast.success(data?.message);
       setBg({...bg, darkBg:false, showUploadProduct:false})

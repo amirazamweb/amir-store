@@ -28,15 +28,6 @@ useEffect(()=>{
   getProductCount(paginationCategory);
 }, []);
 
-// store page count in array
-const paginationArr = ()=>{
-  const tempArr = [];
-  for(let i=1; i<=pageCount; i++){
-    tempArr.push(i);
-  }
-  return tempArr;
-}
-
 // selectCategoryHandler
 const selectCategoryHandler = async(e)=>{
   getProductCount(e.target.value);
@@ -68,11 +59,6 @@ const getAllProductsByPageNumber = async(num)=>{
   }
 }
 
-// pagination PageNumber Handler
-const paginationPageNumberHandler = async(num)=>{
-  setPaginationPageNumber(num);
-  getAllProductsByPageNumber(num)
-}
 
 // prev page handler
 const previousPageHandler = ()=>{
@@ -120,16 +106,6 @@ const handleUploadProduct = ()=>{
 }
 
 
-// pagination style
-const paginationStyle = (num)=>{
-  const styleObj = {
-    backgroundColor:`${num==paginationPageNumber?'#FE4938':''}`,
-    color: `${num==paginationPageNumber?'#FFF':''}`
-  }
-
-  return styleObj;
-}
-
   return (
     showLoader?
     (<Spinner/>):
@@ -172,25 +148,17 @@ const paginationStyle = (num)=>{
        }
 
       {/* upload product */}
-       {bg?.showUploadProduct && <UploadProduct getAllProducts={getAllProducts}/>}
+       {bg?.showUploadProduct && <UploadProduct getAllProducts={getAllProducts} getProductCount={getProductCount}/>}
        {bg?.showUpdateProduct && <UpdateProduct {...updatePopData} getAllProducts={getAllProducts}/>}
     
       {/* pagination start */}
 
       <div className='all-product-pagination'>
-      <table>
-         <tr>
-         <td onClick={previousPageHandler}><Link>Prev</Link></td>
-         {
-          paginationArr().map((num)=>{
-            return <td onClick={()=>paginationPageNumberHandler(num)} style={paginationStyle(num)}>
-            <Link>{num}</Link>
-            </td>
-          })
-         }
-         <td onClick={nextPageHandler}><Link>Next</Link></td>
-         </tr>
-      </table>
+        <div className='pagination'>
+        <button onClick={previousPageHandler}>Prev</button>
+        <div>{paginationPageNumber} of {pageCount}</div>
+        <button onClick={nextPageHandler}>Next</button>
+        </div>
       </div>
 
     </div>
