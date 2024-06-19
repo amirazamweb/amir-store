@@ -14,7 +14,7 @@ const ZoomProduct = ({url}) => {
     <div className='w-full h-[100vh] fixed top-0 left-0 flex justify-center items-center z-30'>
         <div className='h-[90vh] w-[40%] bg-slate-200 relative'>
         <img src={url}
-        alt='zoom-pic' className='h-full mx-auto'/> 
+        alt='zoom-pic' className='h-full mx-auto object-scale-down mix-blend-multiply'/> 
 
          <div className='absolute top-[-22px] right-[-22px] text-xl text-red-600 cursor-pointer p-1' onClick={closeZoomProductHandler}>
          <MdClose />

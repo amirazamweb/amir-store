@@ -12,8 +12,8 @@ const navigate = useNavigate();
 
 
   return (
-    <header className='h-16 bg-[#f7f1e3] customHeaderStyle'>
-      <div className='h-full container mx-auto flex items-center px-4 justify-between'>
+    <header className='h-16 bg-[#f7f1e3] customHeaderStyle sticky top-0 left-0 z-50'>
+      <div className='h-full container mx-auto flex items-center px-2 md:px-4 justify-between'>
         <div>
           <Link to={'/'}><img src={logo} alt='logo' className='h-[70px] sm:h-[80px]'/></Link>
         </div>

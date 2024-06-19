@@ -12,14 +12,62 @@ const AllUsers = () => {
     const [auth] = useAuth();
     const [showLoader, setShowLoader] = useState(true);
     const [bg, setBg] = useBg();
-    const [rolePopupData, setRolePopupData] = useState({id:'', name:'', email:'', role:''})
+    const [rolePopupData, setRolePopupData] = useState({id:'', name:'', email:'', role:''});
+    const [pageCount, setPageCount] = useState(1);
+    const [paginationPageNumber, setPaginationPageNumber] = useState(1);
 
-    // getting all users
-    const getAllUsers = async()=>{
-        const {data} = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/all-users/${auth?.user._id}`);
+    // getting all user count
+    const getAllUsersCountHandler = async()=>{
+        try {
+            const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/all-user-count/${auth?.user._id}`);
+        const count = Math.ceil((data?.userCount)/15);
+        setPageCount(count);
+        } catch (error) {
+            console.log('Something went wrong');
+        }
+     }
+
+     //  all user count effect
+        useEffect(()=>{
+            getAllUsersCountHandler();
+        },[]);
+
+    
+    //getAllUersByPagination
+    const getAllUersByPaginationHandler = async(page)=>{
+       try {
+        const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/all-users/${auth?.user._id}/${page}`);
         setAllUsers(data);
         setShowLoader(false);
-     }
+       } catch (error) {
+        console.log('Something went wrong');
+       }
+    }
+    
+    // get all users by pagination use effect
+    useEffect(()=>{
+        getAllUersByPaginationHandler(paginationPageNumber);
+    }, [])
+
+
+    // prev page handler
+ const previousPageHandler = ()=>{
+    if(paginationPageNumber==1){
+     return
+    }
+    getAllUersByPaginationHandler(paginationPageNumber-1);
+    setPaginationPageNumber(paginationPageNumber-1)
+ }
+ 
+ // next page handler
+ const nextPageHandler = ()=>{
+   if(paginationPageNumber==pageCount){
+    return
+   }
+   getAllUersByPaginationHandler(paginationPageNumber+1);
+    setPaginationPageNumber(paginationPageNumber+1);
+   
+ }
 
 
     //  changeRoleHandler
@@ -29,15 +77,10 @@ const AllUsers = () => {
     }
 
 
-    //  use effect
-    useEffect(()=>{
-    getAllUsers()
-    },[]);
-
   return (
     showLoader?
     (<Spinner/>):
-    (<div className='px-8 py-6'>
+    (<div className='px-8 py-6 max-h-[calc(100vh-104px)] h-full overflow-auto relative'>
     <h1 className='text-xl font-semibold text-[#2c2c54]'>All Users</h1>
     <table className='userCustomTable'>
         <thead>
@@ -75,8 +118,21 @@ const AllUsers = () => {
       name={rolePopupData.name}
       email={rolePopupData.email}
       role={rolePopupData.role}
-      allUsersHandler = {getAllUsers}
+      getAllUersByPaginationHandler={getAllUersByPaginationHandler}
+      paginationPageNumber={paginationPageNumber}
       />}
+
+    {/* all users pagination */}
+
+      {pageCount>1==true &&(
+        <div className='pagination-wrapper'>
+        <div className='pagination'>
+        <button onClick={previousPageHandler}>Prev</button>
+        <div>{paginationPageNumber} of {pageCount}</div>
+        <button onClick={nextPageHandler}>Next</button>
+        </div>
+      </div>
+      )}
     
 </div>)
   )

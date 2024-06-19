@@ -25,14 +25,14 @@ const checkOldUserController = async(req, res)=>{
         
         const user = await UserModel.findOne({email}).select({password:0, profileImg:0});
         if (user) {
-          return res.status(200).send({
+          return res.send({
               success: false,
               message: 'Email is already registered'
           })
         }
         res.send({newUser:true})
    } catch (error) {
-    res.status(400).send("Error checking new user");
+    res.send("Error checking new user");
     console.log(error);
    }
 }
@@ -52,7 +52,7 @@ const otpController = async(req, res)=>{
       res.send('OTP has been sent to your email!')
 
      } catch (error) {
-        res.status(400).send("Error occured sending otp");
+        res.send("Error occured sending otp");
         console.log(error);
      }
 }
@@ -72,7 +72,7 @@ const signupController = async(req, res)=>{
 
         newUser.save();
 
-        res.status(201).send({
+        res.send({
           success: true,
           message: 'User registered successfully'
       })
@@ -80,7 +80,7 @@ const signupController = async(req, res)=>{
 
     } catch (error) {
       console.log(error);
-      res.status(500).send({
+      res.send({
           success: false,
           message: 'Error while registering user'
       })
@@ -104,7 +104,7 @@ const loginController = async(req, res)=>{
 
           // checking password
           if(!comparePassword(password, user.password)){
-            return res.status(200).send({
+            return res.send({
               success: false,
               message: 'Not a valid credentials'
           })
@@ -112,14 +112,14 @@ const loginController = async(req, res)=>{
 
           // create token
            const token = createToken(user._id);
-           res.status(200).send({
+           res.send({
            success: true,
            message: 'Login successfully',
            user: { name: user.name, email: user.email, _id: user._id, role: user.role },
            token
           })     
          } catch (error) {
-          res.status(500).send({
+          res.send({
             success: false,
             message: 'Error while login user'
         })
@@ -131,9 +131,9 @@ const profileImageController = async(req, res)=>{
   try {
     const user = await UserModel.findById(req.params.id).select({profileImg:1});
     res.set('Content-type', user?.profileImg.contentType);
-    res.status(200).send(user?.profileImg.data)
+    res.send(user?.profileImg.data)
   } catch (error) {
-    res.status(500).send({
+    res.send({
       success: false,
       message: 'Error while getting user image'
   })
@@ -147,7 +147,7 @@ const allUsersController = async(req, res)=>{
     const users = await UserModel.find({_id:{$nin:[req.params.uid]}}).select({profileImg:0, password:0, code:0}).sort({ createdAt: -1 });
     res.json(users)
   } catch (error) {
-    res.status(500).send({
+    res.send({
       success: false,
       message: 'Error while getting all users'
   })
@@ -159,7 +159,7 @@ const allUsersController = async(req, res)=>{
 const updateRoleController = async(req, res)=>{
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(req.params.id, req.body, {new:true}).select({password:0, profileImg:0});
-    res.status(201).send({
+    res.send({
       success:true,
       message: 'User role updated successfully!'
     })
@@ -172,4 +172,40 @@ const updateRoleController = async(req, res)=>{
   }
 }
 
-module.exports = {checkOldUserController, otpController, signupController, loginController, profileImageController, allUsersController, updateRoleController};
+// userCountController
+const allUserCountController = async(req, res)=>{
+  try {
+    const users = await UserModel.find({_id:{$nin:[req.params.uid]}}).select({profileImg:0, password:0, code:0});
+    res.send({
+      sucess:true,
+      userCount:users.length
+    })
+  } catch (error) {
+    res.send({
+      success:false,
+      message: 'Error while getting all user count!'
+    })
+    console.log(error);
+  }
+}
+
+// allUsersByPaginationController
+const allUsersByPaginationController = async(req, res)=>{
+  try {
+    const {uid, page} = req.params;
+    const numberOfSkipUsers = (page-1)*15;
+
+    const users = await UserModel.find({_id:{$nin:[uid]}}).select({profileImg:0, password:0, code:0}).skip(numberOfSkipUsers).limit(15);
+
+    res.json(users);
+    
+  } catch (error) {
+    res.send({
+      success:false,
+      message: 'Error while getting all users by pagination!'
+    })
+    console.log(error);
+  }
+}
+
+module.exports = {checkOldUserController, otpController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController};

@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 
-const UpdateProduct = ({_id, productName, brandName, category, productImage, price, sellingPrice, description, getAllProducts}) => {
+const UpdateProduct = ({_id, productName, brandName, category, productImage, price, sellingPrice, description, currentPage}) => {
   const [productDetails, setproductDetails] = useState({_id, productName, brandName, category, productImage, price, sellingPrice, description}) 
 
   const [bg, setBg] = useBg();
@@ -65,7 +65,7 @@ const UpdateProduct = ({_id, productName, brandName, category, productImage, pri
   try {
     const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/update/${_id}`, productDetails);
     if(data?.success){
-      getAllProducts();
+      currentPage[0](currentPage[1], currentPage[2]);
       toast.success(data?.message);
       setBg({...bg, darkBg:false, showUpdateProduct:false});
     }
@@ -160,7 +160,7 @@ const handleCloseUpdateProduct = ()=>[
                    (<div className='flex flex-wrap gap-2'>
                      {productDetails?.productImage.map((url, index)=>{
                      return <div className='h-[70px] w-[70px] bg-slate-100 border p-1 cursor-pointer relative group' key={index} onClick={showZoomProductHandler}>
-                         <img src={url} alt='pr-img' className='h-full bg-slate-100 mx-auto'/>
+                         <img src={url} alt='pr-img' className='h-full bg-slate-100 mx-auto object-scale-down mix-blend-multiply'/>
 
                          <div className='absolute bottom-1 right-1 cursor-pointer hover:text-red-600 hidden group-hover:block' onClick={()=>handleRemoveProductImage(index)}>
                            <MdDelete />

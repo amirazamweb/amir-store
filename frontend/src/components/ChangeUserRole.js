@@ -4,7 +4,7 @@ import { useBg } from '../context/bg';
 import axios from 'axios';
 import toast from 'react-hot-toast'
 
-const ChangeUserRole = ({id, name, email, role, allUsersHandler}) => {
+const ChangeUserRole = ({id, name, email, role, getAllUersByPaginationHandler,paginationPageNumber}) => {
     const [bg, setBg] = useBg();
     const [newRole, setNewRole] = useState(role);
 
@@ -20,7 +20,7 @@ const ChangeUserRole = ({id, name, email, role, allUsersHandler}) => {
         }
         const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/update-user/${id}`, {role:newRole});
         if(data.success){
-          allUsersHandler();
+          getAllUersByPaginationHandler(paginationPageNumber);
           toast.success(data.message);
           setBg({...bg, darkBg:false, userRole:false});
         }

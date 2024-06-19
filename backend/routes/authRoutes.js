@@ -1,6 +1,6 @@
 const express = require('express');
 const formidable = require('express-formidable');
-const {checkOldUserController, otpController, signupController, loginController, profileImageController, allUsersController, updateRoleController} = require('../controller/authController');
+const {checkOldUserController, otpController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController} = require('../controller/authController');
 const {isLogin, isAdmin} = require('../middlewares/authMiddleware');
 
  const router = express.Router();
@@ -34,4 +34,10 @@ router.get('/all-users/:uid', allUsersController);
 
 // change user role
 router.post('/update-user/:id', updateRoleController)
+
+// all users count
+router.post('/all-user-count/:uid', allUserCountController)
+
+// all users by pagination
+router.post('/all-users/:uid/:page', allUsersByPaginationController)
  module.exports = router;

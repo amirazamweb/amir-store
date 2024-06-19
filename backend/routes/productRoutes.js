@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const {uploadProductController, allProductsController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController} = require('../controller/productController')
+const {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler} = require('../controller/productController')
 
 // upload product || POST
 router.post('/upload', uploadProductController);
-
-// get all poroduct
-router.get('/all-products', allProductsController);
 
 // update single product
 router.post('/update/:id', updateProductController);
@@ -17,11 +14,19 @@ router.delete('/delete/:id', deleteProductController)
 // get total product count
 router.get('/total-product-count', totalProductCountController);
 
-// added new route
 // product pagination
 router.post('/pagination', productPaginationHandler);
 
 // product count by category
-router.post('/product-count/:category', productCountByCategoryController)
+router.post('/product-count/:category', productCountByCategoryController);
+
+// get single poroduct each category
+router.get('/category-list', categoryListcontroller);
+
+// get all product by category
+router.get('/product-category/:category', productCategoryHandler);
+
+// get single product
+router.get('/single-product/:id', singleProductHandler)
 
 module.exports = router;

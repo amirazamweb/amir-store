@@ -5,7 +5,6 @@ import axios from 'axios';
 import AdminProductCard from '../../components/AdminProductCard';
 import Spinner from '../../components/Spinner';
 import UpdateProduct from '../../components/UpdateProduct';
-import { Link } from 'react-router-dom';
 import productsCategory from '../../helpers/productsCategory';
 
 const AllProducts = () => {
@@ -18,19 +17,21 @@ const [paginationCategory, setPaginationCategory] = useState('all');
 const [paginationPageNumber, setPaginationPageNumber] = useState(1);
 
 // product count
-const getProductCount = async(categ)=>{
+const getProductCountHandler = async(categ)=>{
+  // setShowLoader(true);
   const res = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/product-count/${categ}`);
   const numberOfPages = Math.ceil((res.data.toatalProduct)/12);
   setPageCount(numberOfPages);
 }
 
 useEffect(()=>{
-  getProductCount(paginationCategory);
+  getProductCountHandler(paginationCategory);
 }, []);
 
 // selectCategoryHandler
 const selectCategoryHandler = async(e)=>{
-  getProductCount(e.target.value);
+  // setShowLoader(true);
+  getProductCountHandler(e.target.value);
   setPaginationPageNumber(1);
     setPaginationCategory(e.target.value);
 
@@ -38,8 +39,10 @@ const selectCategoryHandler = async(e)=>{
       const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/pagination`,{
         paginationCategory:e.target.value, paginationPageNumber:1
       });
-      setAllProducts(data || []);
-      setShowLoader(false);
+      if(data?.success){
+        setAllProducts(data?.paginatedProductList || []);
+        setShowLoader(false);
+        }
     } catch (error) {
       console.log(error);
     }
@@ -47,13 +50,16 @@ const selectCategoryHandler = async(e)=>{
 }
 
 // get all product by page numer
-const getAllProductsByPageNumber = async(num)=>{
+const getAllProductsByPageNumberHandler = async(num)=>{
+  // setShowLoader(true);
   try {
     const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/pagination`,{
       paginationCategory, paginationPageNumber:num
     });
-    setAllProducts(data || []);
-    setShowLoader(false);
+    if(data?.success){
+      setAllProducts(data?.paginatedProductList || []);
+      setShowLoader(false);
+      }
   } catch (error) {
     console.log(error);
   }
@@ -66,7 +72,7 @@ const previousPageHandler = ()=>{
     return
    }
 
-   getAllProductsByPageNumber(paginationPageNumber-1);
+   getAllProductsByPageNumberHandler(paginationPageNumber-1);
    setPaginationPageNumber(paginationPageNumber-1);
 
 }
@@ -77,19 +83,21 @@ const nextPageHandler = ()=>{
    return
   }
 
-  getAllProductsByPageNumber(paginationPageNumber+1);
+  getAllProductsByPageNumberHandler(paginationPageNumber+1);
   setPaginationPageNumber(paginationPageNumber+1);
 
 }
 
 // get default products
-const getAllProducts = async()=>{
+const getAllProductsHandler = async(category, pageNumber)=>{
   try {
     const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/pagination`,{
-      paginationCategory, paginationPageNumber:1
+      paginationCategory:category, paginationPageNumber:pageNumber
     });
-    setAllProducts(data || []);
+    if(data?.success){
+    setAllProducts(data?.paginatedProductList || []);
     setShowLoader(false);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -97,7 +105,7 @@ const getAllProducts = async()=>{
 
 // useEffect
 useEffect(()=>{
-    getAllProducts();
+    getAllProductsHandler(paginationCategory, paginationPageNumber);
 }, [])
 
 // handleUploadProduct
@@ -115,13 +123,13 @@ const handleUploadProduct = ()=>{
       <h1 className='text-xl font-semibold text-[#2c2c54]'>All Products</h1>
 
       <div className='flex gap-4 items-center'>
+      <span>Select by category</span>
       <select 
-      className='outline-none text-[#FE4938] border border-[#FE4938] px-3 py-1.5 text-sm rounded-3xl'
+      className='outline-none text-[#2c2c54] border border-[#2c2c54] px-3 py-1.5 text-sm rounded-3xl'
       onChange={selectCategoryHandler}>
-      <option disabled selected>Select category</option>
       <option value='all'>All</option>
       {productsCategory?.map((p)=>{
-        return <option value={p.value}>{p.label}</option>
+        return <option value={p.value} selected={p.value==paginationCategory&&true}>{p.label}</option>
       })}
       </select>
 
@@ -132,13 +140,13 @@ const handleUploadProduct = ()=>{
 
        {
         allProducts.length?
-        (<div className='mt-[20px] flex justify-center flex-wrap gap-5'>
+        (<div className='mt-[20px] flex flex-wrap gap-3'>
           {allProducts.map((p, i)=>{
             return <AdminProductCard
-            key={i}
+            key={i+p.productName}
             data={p}
             callBack={setUpdatePopData}
-            getAllProducts={getAllProducts}
+            currentPage={[getAllProductsHandler, paginationCategory, paginationPageNumber, getProductCountHandler]}
             />
           })}
         </div>):
@@ -148,18 +156,22 @@ const handleUploadProduct = ()=>{
        }
 
       {/* upload product */}
-       {bg?.showUploadProduct && <UploadProduct getAllProducts={getAllProducts} getProductCount={getProductCount}/>}
-       {bg?.showUpdateProduct && <UpdateProduct {...updatePopData} getAllProducts={getAllProducts}/>}
+       {bg?.showUploadProduct && <UploadProduct />}
+       {bg?.showUpdateProduct && <UpdateProduct {...updatePopData} currentPage={[getAllProductsHandler, paginationCategory, paginationPageNumber]}/>}
     
       {/* pagination start */}
 
-      <div className='all-product-pagination'>
+      {
+        pageCount>1==true &&(
+          <div className='pagination-wrapper'>
         <div className='pagination'>
         <button onClick={previousPageHandler}>Prev</button>
         <div>{paginationPageNumber} of {pageCount}</div>
         <button onClick={nextPageHandler}>Next</button>
         </div>
       </div>
+        )
+      }
 
     </div>
     )

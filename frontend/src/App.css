@@ -117,8 +117,8 @@
   }
 
 
-  /* ================all-product-pagination=============== */
-  .all-product-pagination{
+  /* ================pagination=============== */
+  .pagination-wrapper{
     position: absolute;
     bottom: 15px;
     left: 50%;
@@ -140,4 +140,9 @@
     padding: 3px 10px;
     color: #fff;
     border-radius: 3px;
+  }
+
+  /* ================scrollbar-none================ */
+  .scrollbar-none::-webkit-scrollbar{
+    display: none;
   }

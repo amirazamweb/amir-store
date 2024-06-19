@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 
-const UploadProduct = ({getAllProducts, getProductCount}) => {
+const UploadProduct = () => {
   const [productDetails, setproductDetails] = useState({
     productName:'',
     brandName:'',
@@ -74,10 +74,8 @@ const UploadProduct = ({getAllProducts, getProductCount}) => {
   try {
     const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/upload`, productDetails);
     if(data?.success){
-      getProductCount('all');
-      getAllProducts();
       toast.success(data?.message);
-      setBg({...bg, darkBg:false, showUploadProduct:false})
+      setBg({...bg, darkBg:false, showUploadProduct:false});
     }
   } catch (error) {
     console.log(error);
@@ -169,7 +167,7 @@ const handleCloseUploadProduct = ()=>[
                    (<div className='flex flex-wrap gap-2'>
                      {productDetails?.productImage.map((url, index)=>{
                      return <div className='h-[70px] w-[70px] bg-slate-100 border p-1 cursor-pointer relative group' key={index} onClick={showZoomProductHandler}>
-                         <img src={url} alt='pr-img' className='h-full bg-slate-100 mx-auto'/>
+                         <img src={url} alt='pr-img' className='h-full bg-slate-100 mx-auto object-scale-down mix-blend-multiply'/>
 
                          <div className='absolute bottom-1 right-1 cursor-pointer hover:text-red-600 hidden group-hover:block' onClick={()=>handleRemoveProductImage(index)}>
                            <MdDelete />
