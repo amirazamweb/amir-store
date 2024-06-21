@@ -116,7 +116,7 @@ const handleCloseUploadProduct = ()=>[
 
 
   return (
-    <div className='w-full h-[100vh] fixed top-0 left-0 flex justify-center items-center z-20'>
+    <div className='w-full h-[100vh] fixed top-0 left-0 flex justify-center items-center z-30'>
         <div className='bg-white max-w-md w-full px-6 py-4 shadow-md max-h-[90vh] overflow-y-scroll relative'>
             <h2 className='text-lg mb-3 text-[#FE4938] font-semibold'>Upload Product</h2>
             

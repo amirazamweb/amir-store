@@ -190,4 +190,30 @@ const singleProductHandler = async(req, res)=>{
     }
 }
 
-module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler}
+// recommendProductController
+const recommendProductController = async(req, res)=>{
+       try {
+        const {id} = req.params;
+        let products;
+        if(id!='dummy'){
+            products = await ProductModel.find({category: req.body.category,_id:{$nin:[req.params.id]}}).sort({createdAt:-1});
+        }
+
+        else{
+            products = await ProductModel.find({category: req.body.category}).sort({createdAt:-1});
+        }
+        res.send({
+            success:true,
+            message:'All recommended products',
+            products
+        })
+       } catch (error) {
+        res.send({
+            success:false,
+            message:'Error while getting single product'
+        })
+        console.log(error);
+       }
+}
+
+module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController}

@@ -11,7 +11,7 @@ const Home = () => {
       <BannerProduct/>
       <HomeProductCategory category={'airpodes'} heading={"Top's Airpodes"}/>
       <HomeProductCategory category={'camera'} heading={'Camera & Photography'}/>
-      {/* <HomeProductCategory category={'earphones'}/> */}
+      <HomeProductCategory category={'earphones'} heading={'Latest Earphones'}/>
       <HomeProductCategory category={'mobiles'} heading={'Mobiles'}/>
       {/* <HomeProductCategory category={'mouse'}/> */}
       {/* <HomeProductCategory category={'printers'}/> */}

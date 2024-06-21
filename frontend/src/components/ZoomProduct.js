@@ -11,7 +11,7 @@ const ZoomProduct = ({url}) => {
 
 
   return (
-    <div className='w-full h-[100vh] fixed top-0 left-0 flex justify-center items-center z-30'>
+    <div className='w-full h-[100vh] fixed top-0 left-0 flex justify-center items-center z-40'>
         <div className='h-[90vh] w-[40%] bg-slate-200 relative'>
         <img src={url}
         alt='zoom-pic' className='h-full mx-auto object-scale-down mix-blend-multiply'/> 

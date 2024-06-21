@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import addToCart from '../helpers/addToCart';
 
 const HomeProductCategory = ({category, heading}) => {
@@ -57,7 +57,7 @@ const HomeProductCategory = ({category, heading}) => {
     useEffect(()=>{
         const interval = setInterval(()=>{
             productCount>5 && forwardHandler();
-        }, 5000)
+        }, 8000)
 
         return ()=> clearInterval(interval);
 
@@ -66,25 +66,25 @@ const HomeProductCategory = ({category, heading}) => {
 
   return (
     <div className='container mx-auto px-2 mt-3 md:mt-6 mb-2'>
-         <h1 className='text-xl font-semibold mb-4'>{heading}</h1>
+         <h1 className='text-lg md:text-xl font-semibold mb-4'>{heading}</h1>
          <div className='flex gap-[16px] overflow-x-auto scrollbar-none relative'>
            {
             loading?
             (
                 loadingProduct.map((p, i)=>{
                     return <div key={p+i} className='h-28 w-64 flex' >
-                    <div className='h-full w-28 bg-slate-200 p-2 animate-pulse'></div>
+                    <div className='h-full w-28 bg-slate-100 p-2 animate-pulse'></div>
                     <div className='h-full w-36 bg-white p-2'>
-                       <h1 className='bg-slate-200 w-full h-5 mb-1 rounded animate-pulse'></h1>
-                       <p className='bg-slate-200 w-full h-4 mb-1 rounded animate-pulse'></p>
+                       <h1 className='bg-slate-100 w-full h-5 mb-1 rounded animate-pulse'></h1>
+                       <p className='bg-slate-100 w-full h-4 mb-1 rounded animate-pulse'></p>
 
                        <div className='text-[13.1px] flex justify-between items-center mb-2'>
-                           <p className= 'bg-slate-200 rounded w-1/3 h-4 animate-pulse'></p>
+                           <p className= 'bg-slate-100 rounded w-1/3 h-4 animate-pulse'></p>
 
-                           <p className='bg-slate-200 rounded w-1/3 h-4 animate-pulse'></p>
+                           <p className='bg-slate-100 rounded w-1/3 h-4 animate-pulse'></p>
                        </div>
 
-                       <button className='text-sm bg-slate-200 rounded-xl w-full h-5 animate-pulse cursor-pointer'></button>
+                       <button className='text-sm bg-slate-100 rounded-xl w-full h-5 animate-pulse cursor-auto'></button>
 
                     </div>
                </div>
@@ -93,8 +93,8 @@ const HomeProductCategory = ({category, heading}) => {
             (
                 productList?.map((product)=>{
                     return (
-                        <Link to={`product-detail/${product?._id}`} key={product?.productName} className='h-28 w-64 flex transition-all' style={{transform:`translateX(-${scrollCount*272}px)`}}>
-                             <div className='h-full w-28 bg-slate-200 p-2'>
+                        <Link to={`/product-detail/${product?._id}`} key={product?.productName} className='h-28 w-64 flex transition-all border' style={{transform:`translateX(-${scrollCount*272}px)`}} >
+                             <div className='h-full w-28 bg-slate-100 p-2'>
                                 <img src={product?.productImage[0]} alt={product?.category} className='h-full w-full object-scale-down mix-blend-multiply'/>
                              </div>
                              <div className='h-full w-36 bg-white p-2'>
@@ -107,7 +107,7 @@ const HomeProductCategory = ({category, heading}) => {
                                     <p className='text-slate-600 line-through'>&#8377;{product?.price}</p>
                                 </div>
         
-                                <button className='text-sm bg-red-500 rounded-xl px-3 py-0.5 text-white w-fit mt-2 hover:bg-red-600' onClick={(e)=>addToCart(e, product?._id)}>Add to Cart</button>
+                                <button className='text-[13.5px] bg-red-500 rounded-2xl px-3 py-[1px] text-white w-full mt-2 hover:bg-red-600' onClick={(e)=>addToCart(e, product?._id)}>Add to Cart</button>
         
                              </div>
                         </Link>
