@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 const ChangeUserRole = ({id, name, email, role, getAllUersByPaginationHandler,paginationPageNumber}) => {
     const [bg, setBg] = useBg();
     const [newRole, setNewRole] = useState(role);
+    console.log('change user role called');
 
     // change role handler
     const changeRoleHandler = async()=>{
@@ -29,7 +30,7 @@ const ChangeUserRole = ({id, name, email, role, getAllUersByPaginationHandler,pa
       }
     }
   return (
-    <div className= 'w-full h-[100vh] fixed top-0 left-0 flex justify-center items-center z-20'>
+    <div className= 'w-full h-[100vh] fixed top-0 left-0 flex justify-center items-center z-30'>
         <div className='bg-white max-w-sm w-full px-6 py-4 relative shadow-md'>
             <h3 className='text-lg font-semibold mb-2'>Change User Role</h3>
             <p className='mb-1'><span className='font-semibold'>Name:</span> {name}</p>

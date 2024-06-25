@@ -6,15 +6,21 @@ import { RouterProvider } from 'react-router-dom';
 import router from './routes';
 import { AuthProvider } from './context/auth';
 import { BgProvider } from './context/bg';
+import { CartProvider } from './context/cart';
+import { CartQuantityProvider } from './context/cartQuantityContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
+  <CartProvider>
+    <CartQuantityProvider>
   <AuthProvider>
     <BgProvider>
     <RouterProvider router={router}/>
     </BgProvider>
   </AuthProvider>
+  </CartQuantityProvider>
+  </CartProvider>
   // </React.StrictMode>
 );
 

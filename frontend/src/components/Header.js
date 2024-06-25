@@ -4,11 +4,13 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assest/logo.png'
 import { useAuth } from '../context/auth';
+import { useCart } from '../context/cart';
 
 
 const Header = () => {
 const [auth] = useAuth();
 const navigate = useNavigate();
+const[cart, setCart] = useCart();
 
 
   return (
@@ -27,12 +29,12 @@ const navigate = useNavigate();
 
         <div className='flex items-center gap-6 sm:gap-10'>
 
-          <div className='text-2xl cursor-pointer relative'>
+          <Link to='/cart' className='text-2xl cursor-pointer relative'>
           <span><FaShoppingCart /></span>
           <div className='bg-[#FE4938] text-white w-5 h-5 p-1 flex justify-center items-center rounded-full absolute -top-3 -right-3'>
-            <p className='text-xs'>0</p>
+            <p className='text-xs'>{cart.length}</p>
           </div>
-          </div>
+          </Link>
 
           <div>
             {auth?.token?

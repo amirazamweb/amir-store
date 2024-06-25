@@ -4,6 +4,8 @@ import axios from 'axios';
 import { FaStar } from "react-icons/fa";
 import { FaStarHalf } from "react-icons/fa";
 import RecommendedProduct from '../components/RecommendedProduct';
+import { useCart } from '../context/cart';
+import toast from 'react-hot-toast'
 
 const ProductDetail = () => {
     const {id} = useParams();
@@ -22,6 +24,7 @@ const ProductDetail = () => {
     const [zoomImgURL, setZoomImgURL] = useState('');
     const [lensPosition, setLensPosition] = useState({top:0, left:0});
     const [showMagnifyingImage, setShowMagnifyingImage] = useState(false);
+    const [cart, setCart] = useCart();
 
 
     // get product details
@@ -30,7 +33,13 @@ const ProductDetail = () => {
         try {
          const res = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/single-product/${id}`);   
          if(res?.data?.success){
-            setData(res?.data?.productDetails);
+          const tempData = res?.data?.productDetails;
+            for(let c of cart){
+              if(id==c._id){
+               tempData.addedToCart = true;
+              }
+            }
+            setData(tempData);
             setZoomImgURL(res?.data?.productDetails.productImage[0]);
             setLoading(false);
          }
@@ -42,7 +51,7 @@ const ProductDetail = () => {
     // use effect
     useEffect(()=>{
     getProductDetail(); 
-    }, [id])
+    }, [id, cart])
 
 // showZoomHandler
 const showZoomHandler = (url)=>{
@@ -66,6 +75,35 @@ const lensStyle = {
 const magnifyingStyle = {
   backgroundSize: '400% 400%',
   backgroundPosition:`top -${(lensPosition.top-40)<0? 0 :lensPosition.top-40}px left -${(lensPosition.left-40)<0? 0 :lensPosition.left-40}px`
+}
+
+
+// added to card button custom style
+function buttonStyle(){
+  const customStyle={
+      backgroundColor : data?.addedToCart?'#16a085':'#DC2626',
+      cursor : data?.addedToCart? 'not-allowed':'pointer',
+      borderColor :  data?.addedToCart?'#16a085':'#DC2626',
+      width : data?.addedToCart?'140px':'110px',
+  }
+
+  return customStyle
+
+}
+
+
+// addToCartHandler
+const addToCartHandler = (e)=>{
+  e.preventDefault();
+ e.stopPropagation();
+ if(data?.addedToCart){
+  return
+}
+ setCart([...cart, {...data, _id:id, qty:1}]);
+ const localExistCart = JSON.parse(localStorage.getItem('amir_store_cart')) || [];
+  localExistCart.push({...data, _id:id, qty:1});
+  localStorage.setItem('amir_store_cart', JSON.stringify(localExistCart));
+  toast.success('Product added to cart sucessfully!')
 }
 
 
@@ -146,10 +184,12 @@ const magnifyingStyle = {
                 <span className='text-slate-400 line-through'>
                   &#8377;{new Intl.NumberFormat('en-IN', { minimumFractionDigits: 2 }).format(data?.price)}
                   </span>
+
+                  <span className='text-red-500 font-light'>{Math.floor((((data?.price)-(data?.sellingPrice))/(data?.price))*100)}% OFF</span>
               </div>
               <div className='flex gap-4 items-center py-1'>
                 <button className='w-[110px] md:min-w-[120px] border border-red-600 text-red-600 py-[2px] px-4 rounded text-sm md:text-base hover:bg-red-600 hover:text-white'>Buy</button>
-                <button className='w-[110px] md:min-w-[120px] border border-red-600 bg-red-600 text-white py-[2px] px-4 rounded text-sm md:text-base hover:bg-white hover:text-red-600'>Add To Cart</button>
+                <button className='md:min-w-[120px] border border-red-600 text-white py-[2px] px-4 rounded text-sm md:text-base hover:bg-white' style={buttonStyle()} onClick={(e)=>addToCartHandler(e)}>{data?.addedToCart?'Added to Cart':'Add to Cart'}</button>
               </div>
               <p className='text-base font-semibold'>Description:</p>
               <p className='text-slate-800'>{data?.description}</p>

@@ -3,13 +3,15 @@ import axios from 'axios';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link} from 'react-router-dom';
-import addToCart from '../helpers/addToCart';
+import { useCart } from '../context/cart';
+import toast from 'react-hot-toast';
 
 const HomeProductCategory = ({category, heading}) => {
     const [productList, setProductList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [scrollCount, setScrollCount] = useState(0);
     const [productCount, setproductCount] = useState(0);
+    const [cart, setCart] = useCart();
 
     const loadingProduct = new Array(10).fill(null);
 
@@ -19,8 +21,24 @@ const HomeProductCategory = ({category, heading}) => {
         try {
             const {data} = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/product-category/${category}`); 
             if(data?.success){
-            setProductList(data?.products);
-            setproductCount(data?.products?.length);
+                const productsByCartIdentified = data?.products.map((p)=>{
+                    let flag;
+                    for(let c of cart){
+                      if(c._id===p._id){
+                        flag = true;
+                        const tempObj = {...p, addedToCart:true};
+                        return tempObj
+                      }
+                    
+                    }
+
+                    if(!flag){
+                        return p;
+                    }
+                })
+            // setProductList(data?.products);
+            setProductList(productsByCartIdentified);
+            setproductCount(productsByCartIdentified?.length);
             setLoading(false);
             }
         } catch (error) {
@@ -31,7 +49,7 @@ const HomeProductCategory = ({category, heading}) => {
     // use effect
     useEffect(()=>{
     getAllProducts();
-    }, [])
+    }, [cart.length])
 
     // forward handler
     const forwardHandler = ()=>{
@@ -62,6 +80,34 @@ const HomeProductCategory = ({category, heading}) => {
         return ()=> clearInterval(interval);
 
     }, [scrollCount, productCount])
+
+    
+    // addToCartHandler
+    const addToCartHandler = (e, product)=>{
+        e.preventDefault();
+        e.stopPropagation();
+       if(product.addedToCart){
+         return
+       }
+
+        setCart([...cart, {...product, qty:1}]);
+        const localExistCart = JSON.parse(localStorage.getItem('amir_store_cart')) || [];
+        localExistCart.push({...product, qty:1});
+        localStorage.setItem('amir_store_cart', JSON.stringify(localExistCart));
+        toast.success('Product added to cart sucessfully!')
+    }
+
+
+    // added to card button custom style
+    const buttonStyle = (p)=>{
+        const customStyle={
+            backgroundColor : p?.addedToCart?'#16a085':'#FE4938',
+            cursor : p?.addedToCart? 'not-allowed':'pointer'
+        }
+
+        return customStyle
+
+    }
       
 
   return (
@@ -107,7 +153,7 @@ const HomeProductCategory = ({category, heading}) => {
                                     <p className='text-slate-600 line-through'>&#8377;{product?.price}</p>
                                 </div>
         
-                                <button className='text-[13.5px] bg-red-500 rounded-2xl px-3 py-[1px] text-white w-full mt-2 hover:bg-red-600' onClick={(e)=>addToCart(e, product?._id)}>Add to Cart</button>
+                                <button className='text-[13.5px] b-red-500 rounded-2xl px-3 py-[1px] text-white w-full mt-2 hover:bg-red-600' style={buttonStyle(product)} onClick={(e)=>addToCartHandler(e, product)}>{product?.addedToCart?'Added to Cart':'Add to Cart'}</button>
         
                              </div>
                         </Link>
