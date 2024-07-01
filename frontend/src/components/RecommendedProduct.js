@@ -4,12 +4,39 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import toast from 'react-hot-toast';
 
-const RecommendedProduct = ({id, heading, category}) => {
-    const [productsList, setProductsList] = useState([]);
+const RecommendedProduct = ({id, heading, category, sort}) => {
+    let [productsList, setProductsList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [cart, setCart] = useCart();
 
     const loadingProduct = new Array(5).fill(null);
+
+    // sort product by price
+    if(sort=='acending'){
+        productsList = productsList.sort((a, b)=>{
+            if(a.sellingPrice>b.sellingPrice){
+                return 1
+            }
+            else if(a.sellingPrice<b.sellingPrice){
+                return -1;
+            }
+            return 0;
+        })
+    }
+
+    if(sort=='decending'){
+        productsList = productsList.sort((a, b)=>{
+            if(a.sellingPrice<b.sellingPrice){
+                return 1
+            }
+            else if(a.sellingPrice>b.sellingPrice){
+                return -1;
+            }
+            return 0;
+        })
+    }
+
+
 
 
     const getAllProductsHandler = async()=>{
@@ -42,7 +69,7 @@ const RecommendedProduct = ({id, heading, category}) => {
     // use Effect
     useEffect(()=>{
       getAllProductsHandler();
-    }, [id, cart])
+    }, [id, cart, category])
 
 
     // addToCartHandler
@@ -72,7 +99,9 @@ const RecommendedProduct = ({id, heading, category}) => {
 
 
   return (
-    <div className='px-4 md:px-6'>
+         productsList.length>0 || loading?
+        (
+        <div className=''>
         <h1 className='text-lg md:text-xl font-semibold mb-3 md:mb-5'>{heading}</h1>
 
         <div className='flex flex-wrap gap-2 md:gap-6'>
@@ -120,6 +149,8 @@ const RecommendedProduct = ({id, heading, category}) => {
         </div>
         
     </div>
+        ):
+        (<div className='mt-4'>No category selected</div>)
   )
 }
 

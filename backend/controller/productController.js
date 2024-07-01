@@ -200,7 +200,7 @@ const recommendProductController = async(req, res)=>{
         }
 
         else{
-            products = await ProductModel.find({category: req.body.category}).sort({createdAt:-1});
+            products = await ProductModel.find({category: {$in:[...req.body.category]}}).sort({createdAt:-1});
         }
         res.send({
             success:true,

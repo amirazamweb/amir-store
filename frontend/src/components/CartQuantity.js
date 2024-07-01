@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { IoClose } from "react-icons/io5";
 import { useBg } from '../context/bg';
-import toast from 'react-hot-toast'
 import { useCartQuantityData } from '../context/cartQuantityContext';
 import { useCart } from '../context/cart';
 
