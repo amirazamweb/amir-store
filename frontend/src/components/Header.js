@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CiSearch } from "react-icons/ci";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,7 +10,14 @@ import { useCart } from '../context/cart';
 const Header = () => {
 const [auth] = useAuth();
 const navigate = useNavigate();
-const[cart, setCart] = useCart();
+const[cart] = useCart();
+const [searchData, setSearchData] = useState('');
+
+// serch handler
+const searchHandler = ()=>{
+  navigate(`/search?query=${searchData}`);
+  setSearchData('');
+}
 
 
   return (
@@ -21,8 +28,8 @@ const[cart, setCart] = useCart();
         </div>
 
         <div className='hidden lg:flex items-center w-full h-8 justify-between max-w-sm border-red-200 border rounded-2xl focus-within:shadow'>
-          <input type='text' placeholder='search product here......' className='w-full h-full outline-none pl-4 rounded-l-2xl'/>
-          <div className='bg-[#FE4938] text-lg text-white h-full min-w-[50px] flex items-center justify-center rounded-r-2xl border-2 border-[#FE4938]'>
+          <input type='text' placeholder='search product here......' className='w-full h-full outline-none pl-4 rounded-l-2xl' onChange={(e)=>setSearchData(e.target.value)} value={searchData}/>
+          <div className='bg-[#FE4938] text-lg text-white h-full min-w-[50px] flex items-center justify-center rounded-r-2xl border-2 border-[#FE4938] cursor-pointer' onClick={searchHandler}>
           <CiSearch/>
           </div>
         </div>

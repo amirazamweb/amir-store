@@ -19,8 +19,8 @@ const AllUsers = () => {
     // getting all user count
     const getAllUsersCountHandler = async()=>{
         try {
-            const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/all-user-count/${auth?.user._id}`);
-        const count = Math.ceil((data?.userCount)/15);
+        const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/all-user-count/${auth?.user._id}`);
+        const count = Math.ceil((data?.userCount)/20);
         setPageCount(count);
         } catch (error) {
             console.log('Something went wrong');

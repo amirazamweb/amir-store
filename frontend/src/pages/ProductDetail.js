@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FaStar } from "react-icons/fa";
 import { FaStarHalf } from "react-icons/fa";
@@ -25,6 +25,7 @@ const ProductDetail = () => {
     const [lensPosition, setLensPosition] = useState({top:0, left:0});
     const [showMagnifyingImage, setShowMagnifyingImage] = useState(false);
     const [cart, setCart] = useCart();
+    const navigate = useNavigate();
 
 
     // get product details
@@ -104,6 +105,23 @@ const addToCartHandler = (e)=>{
   localExistCart.push({...data, _id:id, qty:1});
   localStorage.setItem('amir_store_cart', JSON.stringify(localExistCart));
   toast.success('Product added to cart sucessfully!')
+}
+
+
+// buy product handler
+const buyProductHandler = (e)=>{
+  e.preventDefault();
+ e.stopPropagation();
+ if(data?.addedToCart){
+  navigate('/cart');
+  return
+}
+ setCart([...cart, {...data, _id:id, qty:1}]);
+ const localExistCart = JSON.parse(localStorage.getItem('amir_store_cart')) || [];
+  localExistCart.push({...data, _id:id, qty:1});
+  localStorage.setItem('amir_store_cart', JSON.stringify(localExistCart));
+  toast.success('Product added to cart sucessfully!');
+  navigate('/cart');
 }
 
 
@@ -188,7 +206,7 @@ const addToCartHandler = (e)=>{
                   <span className='text-red-500 font-light'>{Math.floor((((data?.price)-(data?.sellingPrice))/(data?.price))*100)}% OFF</span>
               </div>
               <div className='flex gap-4 items-center py-1'>
-                <button className='w-[110px] md:min-w-[120px] border border-red-600 text-red-600 py-[2px] px-4 rounded text-sm md:text-base hover:bg-red-600 hover:text-white'>Buy</button>
+                <button className='w-[110px] md:min-w-[120px] border border-red-600 text-red-600 py-[2px] px-4 rounded text-sm md:text-base hover:bg-red-600 hover:text-white' onClick={buyProductHandler}>Buy</button>
                 <button className='md:min-w-[120px] border border-red-600 text-white py-[2px] px-4 rounded text-sm md:text-base hover:bg-white' style={buttonStyle()} onClick={(e)=>addToCartHandler(e)}>{data?.addedToCart?'Added to Cart':'Add to Cart'}</button>
               </div>
               <p className='text-base font-semibold'>Description:</p>

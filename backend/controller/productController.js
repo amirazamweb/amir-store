@@ -1,5 +1,5 @@
-const productModel = require('../models/productModel');
 const ProductModel = require('../models/productModel');
+const OrderModel = require('../models/orderModel');
 
 // upload product
 const uploadProductController = async(req, res)=>{
@@ -88,7 +88,7 @@ const productPaginationHandler = async(req, res)=>{
      productCategory = {category:paginationCategory}
     }
 
-    const paginatedProductList = await productModel.find(productCategory).skip(numberOfSkipProduct).limit(12).sort({createdAt:-1});
+    const paginatedProductList = await ProductModel.find(productCategory).skip(numberOfSkipProduct).limit(12).sort({createdAt:-1});
 
     res.send({
         success:true,
@@ -175,7 +175,7 @@ const productCategoryHandler = async(req, res)=>{
 // singleProductHandler
 const singleProductHandler = async(req, res)=>{
     try {
-        const productDetails = await productModel.findById(req.params.id);
+        const productDetails = await ProductModel.findById(req.params.id);
         res.send({
             success:true,
             message: 'Single product details',
@@ -216,4 +216,70 @@ const recommendProductController = async(req, res)=>{
        }
 }
 
-module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController}
+
+// search product
+const searchProductController = async(req, res)=>{
+    try {
+        const { keyword } = req.body;
+
+        const results = await ProductModel.find({
+            $or: [{ productName: { $regex: keyword, $options: 'i' } },
+            { brandName: { $regex: keyword, $options: 'i' } }]
+        })
+
+        res.send({
+            success:true,
+            message: 'Sewarch product list',
+            results
+        })
+        
+    } catch (error) {
+        res.send({
+            success:false,
+            message:'Error searching product'
+        })
+        console.log(error);
+    }
+}
+
+
+// order product
+const orderProductController = async(req, res)=>{
+    try {
+        
+        const uploadOrderProduct = new OrderModel(req.body);
+        uploadOrderProduct.save();
+
+        res.send({
+            success:true,
+            message : 'Order placed successfully'
+        });
+        
+    } catch (error) {
+        res.send({
+            success:false,
+            message:'Error while ordering product'
+        })
+        console.log(error);
+    }
+}
+
+// allOrdersController
+const allOrdersController = async(req, res)=>{
+    try {
+        const allOrders = await OrderModel.find({}).populate('buyer');
+        res.send({
+            success:true,
+            message: 'All orders',
+            allOrders
+        })
+    } catch (error) {
+        res.send({
+            success:false,
+            message:'Error while getting all orders'
+        })
+        console.log(error);
+    }
+}
+
+module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController, searchProductController, orderProductController, allOrdersController}

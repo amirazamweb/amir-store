@@ -1,110 +1,96 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/cart';
 import toast from 'react-hot-toast';
 
-const RecommendedProduct = ({id, heading, category, sort}) => {
-    let [productsList, setProductsList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [cart, setCart] = useCart();
+const SearchProduct = () => {
+ const location = useLocation();
+ const urlSearch = new URLSearchParams(location.search);
+ const keyword = urlSearch.get('query');
 
-    const loadingProduct = new Array(5).fill(null);
+ const [productsList, setProductsList] = useState([]);
+ const [loading, setLoading] = useState(true);
+ const [cart, setCart] = useCart();
+ const loadingProduct = new Array(5).fill(null);
 
-    // sort product by price
-    if(sort=='acending'){
-        productsList = productsList.sort((a, b)=>{
-            if(a.sellingPrice>b.sellingPrice){
-                return 1
-            }
-            else if(a.sellingPrice<b.sellingPrice){
-                return -1;
-            }
-            return 0;
-        })
-    }
+//  get serach product
+const getSearchProduct = async()=>{
+    try {
+        const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/search`, {keyword});  
+        if(data?.success){
+            const productsByCartIdentified = data?.results.map((p)=>{
+                let flag;
+                for(let c of cart){
+                  if(c._id===p._id){
+                    flag = true;
+                    const tempObj = {...p, addedToCart:true};
+                    return tempObj
+                  }
+                
+                }
 
-    if(sort=='decending'){
-        productsList = productsList.sort((a, b)=>{
-            if(a.sellingPrice<b.sellingPrice){
-                return 1
-            }
-            else if(a.sellingPrice>b.sellingPrice){
-                return -1;
-            }
-            return 0;
-        })
-    }
-
-
-
-
-    const getAllProductsHandler = async()=>{
-        try {
-            const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/recommend-product/${id?id:'dummy'}`, {category});  
-            if(data?.success){
-                const productsByCartIdentified = data?.products.map((p)=>{
-                    let flag;
-                    for(let c of cart){
-                      if(c._id===p._id){
-                        flag = true;
-                        const tempObj = {...p, addedToCart:true};
-                        return tempObj
-                      }
-                    
-                    }
-
-                    if(!flag){
-                        return p;
-                    }
-                })
-                setProductsList(productsByCartIdentified);
-                setLoading(false);
-            }
-        } catch (error) {
-            console.log(error);
+                if(!flag){
+                    return p;
+                }
+            })
+            setProductsList(productsByCartIdentified);
+            setLoading(false);
         }
+    } catch (error) {
+        console.log(error);
     }
-
-    // use Effect
-    useEffect(()=>{
-      getAllProductsHandler();
-    }, [id, cart, category])
+}
 
 
-    // addToCartHandler
-    const addToCartHandler = (e, product)=>{
-        e.preventDefault();
-       e.stopPropagation();
-      if(product.addedToCart){
-        return
-      }
-       setCart([...cart, {...product, qty:1}]);
-       const localExistCart = JSON.parse(localStorage.getItem('amir_store_cart')) || [];
-        localExistCart.push({...product, qty:1});
-        localStorage.setItem('amir_store_cart', JSON.stringify(localExistCart));
-        toast.success('Product added to cart sucessfully!')
-    }
+// use Effect
+useEffect(()=>{
+    getSearchProduct();
+}, [keyword, cart])
+
+ 
+   // addToCartHandler
+const addToCartHandler = (e, product)=>{
+   e.preventDefault();
+   e.stopPropagation();
+  if(product.addedToCart){
+    return
+  }
+   setCart([...cart, {...product, qty:1}]);
+   const localExistCart = JSON.parse(localStorage.getItem('amir_store_cart')) || [];
+    localExistCart.push({...product, qty:1});
+    localStorage.setItem('amir_store_cart', JSON.stringify(localExistCart));
+    toast.success('Product added to cart sucessfully!')
+}
 
 // added to card button custom style
-    const buttonStyle = (p)=>{
-        const customStyle={
-            backgroundColor : p?.addedToCart?'#16a085':'#FE4938',
-            cursor : p?.addedToCart? 'not-allowed':'pointer'
-        }
-
-        return customStyle
-
+const buttonStyle = (p)=>{
+    const customStyle={
+        backgroundColor : p?.addedToCart?'#16a085':'#FE4938',
+        cursor : p?.addedToCart? 'not-allowed':'pointer'
     }
+
+    return customStyle
+
+}
 
 
   return (
-         productsList.length>0 || loading?
-        (
-        <div className='px-2 md:px-6'>
-        <h1 className='text-lg md:text-xl font-semibold mb-3 md:mb-5'>{heading}</h1>
+    <div className='container mx-auto'>
+        
+        <div className='my-4 md:my-6 px-4 md:px-6'>
+            {
+                loading?
+                (
+                    <h1 className='w-36 h-6 mb-4 bg-slate-100 animate-pulse'></h1>
+                ):
+                (
+                    <h1 className='font-semibold mb-4'>Search Results : {productsList?.length}</h1>
+                )
+            }
 
-        <div className='flex flex-wrap gap-2 md:gap-6'>
+            <div className='flex flex-wrap gap-2 md:gap-6'>
             {
                 loading?(
                     loadingProduct?.map((elm, ind)=>{
@@ -146,12 +132,12 @@ const RecommendedProduct = ({id, heading, category, sort}) => {
                     })
                 )
             }
+            </div>
+
         </div>
         
     </div>
-        ):
-        (<div className='m-6'>No category selected</div>)
   )
 }
 
-export default RecommendedProduct
+export default SearchProduct

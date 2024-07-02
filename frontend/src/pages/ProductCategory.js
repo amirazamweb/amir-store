@@ -90,8 +90,8 @@ const ProductCategory = () => {
 
   return (
     <div className='container mx-auto'>
-      <div className='flex justify-center gap-10 my-4 md:my-6 px-4 md:px-6'>
-         <div className='hidden md:block w-[15%] shadow-md p-3 h-fit min-h-full'>
+      <div className='flex justify-center gap-1 my-4 md:my-6 px-4 md:px-6'>
+         <div className='hidden md:block w-[17%] shadow-md px-6 py-2 h-fit min-h-full sticky top-[88px]'>
            <div>
              <h2 className='text-slate-600 font-semibold'>SORT BY</h2>
              <hr className='my-1.5'/>
@@ -118,8 +118,8 @@ const ProductCategory = () => {
             }
            </div>
          </div>
-         <div className='w-[100%] md:w-[85%]'>
-           <RecommendedProduct heading={'Selected Product'} category={[...urlCategoryListArray]} sort = {sortByPrice}/>
+         <div className='w-[100%] md:w-[83%]'>
+           <RecommendedProduct heading={'Your Favourite Product'} category={[...urlCategoryListArray]} sort = {sortByPrice}/>
          </div>
       </div>
     </div>

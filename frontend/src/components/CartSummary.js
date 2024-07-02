@@ -1,10 +1,14 @@
 import React from 'react'
 import { useAuth } from '../context/auth'
 import { useCart } from '../context/cart';
+import {useNavigate} from 'react-router-dom'
+import axios from 'axios';
+import toast from 'react-hot-toast'
 
 const CartSummary = () => {
     const [auth] = useAuth();
-    const [cart] = useCart();
+    const [cart, setCart] = useCart();
+    const navigate = useNavigate();
     
     // calculatr total mrp
     const calculateTotalMRP = ()=>{
@@ -40,6 +44,24 @@ const CartSummary = () => {
         return sp;
     }
 
+    // orderPlaceHandler
+    const orderPlaceHandler = async()=>{
+        try {
+            const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/order`, {
+                products:[...cart],
+                buyer : auth?.user._id
+            });
+            
+            if(data?.success){
+               localStorage.removeItem('amir_store_cart');
+               setCart([]);
+               toast.success(data?.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
   return (
     <div className='w-full md:w-80 px-3 md:px-0'>
         <h1 className='text-center py-1 text-lg font-semibold'>Summary</h1>
@@ -63,10 +85,10 @@ const CartSummary = () => {
         {
             auth?.token?
             (
-                <button className='w-full bg-[#FE4938] text-white py-1 mt-4'>Place Order</button>
+                <button className='w-full bg-[#FE4938] text-white py-1 mt-4' onClick={orderPlaceHandler}>Place Order</button>
             ):
             (
-                <button className='w-full bg-[#FE4938] text-white py-1 mt-4'>Login to Continue</button>
+                <button className='w-full bg-[#FE4938] text-white py-1 mt-4' onClick={()=>navigate('/login')}>Login to Continue</button>
             )
         }
     </div>

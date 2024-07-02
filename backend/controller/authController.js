@@ -193,9 +193,9 @@ const allUserCountController = async(req, res)=>{
 const allUsersByPaginationController = async(req, res)=>{
   try {
     const {uid, page} = req.params;
-    const numberOfSkipUsers = (page-1)*15;
+    const numberOfSkipUsers = (page-1)*20;
 
-    const users = await UserModel.find({_id:{$nin:[uid]}}).select({profileImg:0, password:0, code:0}).skip(numberOfSkipUsers).limit(15);
+    const users = await UserModel.find({_id:{$nin:[uid]}}).select({profileImg:0, password:0, code:0}).skip(numberOfSkipUsers).limit(20);
 
     res.json(users);
     

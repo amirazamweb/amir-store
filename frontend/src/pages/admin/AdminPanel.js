@@ -5,6 +5,8 @@ import Loader from '../../components/Loader';
 import { useAuth } from '../../context/auth';
 import { FaUsers } from "react-icons/fa6";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import { FaCartFlatbedSuitcase } from "react-icons/fa6";
+import { AiFillProduct } from "react-icons/ai";
 import toast from 'react-hot-toast'
 
 const AdminPanel = () => {
@@ -53,8 +55,10 @@ const AdminPanel = () => {
           </div>
           <div className='pt-4'>
             <nav className='flex flex-col gap-1 px-4'>
-              <NavLink to='/admin/all-users' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaUsers /> <span>Users</span></NavLink>
-              <NavLink to='/admin/all-products' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaUsers /> <span>Products</span></NavLink>
+              <NavLink to='/admin/all-users' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaUsers /> <span>All Users</span></NavLink>
+              <NavLink to='/admin/all-products' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><AiFillProduct /><span>All Products</span></NavLink>
+              <NavLink to='/admin/all-orders' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaCartFlatbedSuitcase />
+              <span>All Orders</span></NavLink>
             </nav>
           </div>
 
