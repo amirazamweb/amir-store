@@ -24,19 +24,19 @@
 
 .userCustomTable th{
     background-color: #FE4938;
-    color: #dcdde1;
+    color: #fff;
     font-weight: 500;
     border: 1px solid #dcdde1;
 }
 
 .userCustomTable th:nth-of-type(1){
-    width:10%;
+    width:15%;
 }
 .userCustomTable th:nth-of-type(2){
-    width:25%;
+    width:23%;
 }
 .userCustomTable th:nth-of-type(3){
-    width:25%;
+    width:22%;
 }
 .userCustomTable th:nth-of-type(4){
     width:13%;
@@ -54,8 +54,8 @@
 }
 .userCustomTable td{
     text-align: center;
-    font-size: 15px;
-    padding: 0.5px 0;
+    font-size: 16px;
+    padding: 0.9px 0;
     font-weight: 400;
     border: 1px solid #dcdde1;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;

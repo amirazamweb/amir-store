@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController, searchProductController, orderProductController, allOrdersController} = require('../controller/productController')
+const {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController, searchProductController, orderProductController, allOrdersController, allOrdersByPaginationController, updateOrderStatusController} = require('../controller/productController')
 
 // upload product || POST
 router.post('/upload', uploadProductController);
@@ -39,7 +39,13 @@ router.post('/search', searchProductController);
 router.post('/order', orderProductController);
 
 // get all orders
-router.get('/all-orders', allOrdersController)
+router.get('/all-orders', allOrdersController);
+
+// all orders by pagination
+router.post('/all-orders/:page', allOrdersByPaginationController);
+
+// change order status
+router.post('/update-order-status/:id', updateOrderStatusController)
 
 
 

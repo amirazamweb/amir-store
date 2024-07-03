@@ -1,14 +1,14 @@
 const express = require('express');
 const formidable = require('express-formidable');
-const {checkOldUserController, otpController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController} = require('../controller/authController');
+const {signupOTPController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController} = require('../controller/authController');
+const {resetPasswordOTPController} = require('../controller/resetPasswordController');
 const {isLogin, isAdmin} = require('../middlewares/authMiddleware');
 
  const router = express.Router();
 
- router.post('/check-old-user', checkOldUserController);
 
-// otp || POST
-router.post('/otp', otpController);
+//signup otp || POST
+router.post('/signup-otp', signupOTPController);
 
 //  signup || POST
 router.post('/signup', formidable(), signupController);
@@ -39,5 +39,8 @@ router.post('/update-user/:id', updateRoleController)
 router.post('/all-user-count/:uid', allUserCountController)
 
 // all users by pagination
-router.post('/all-users/:uid/:page', allUsersByPaginationController)
+router.post('/all-users/:uid/:page', allUsersByPaginationController);
+
+// otp for reset password
+router.post('/reset-password-otp', resetPasswordOTPController)
  module.exports = router;

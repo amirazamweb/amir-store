@@ -282,4 +282,46 @@ const allOrdersController = async(req, res)=>{
     }
 }
 
-module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController, searchProductController, orderProductController, allOrdersController}
+// allOrdersByPaginationController
+const allOrdersByPaginationController = async(req, res)=>{
+    try {
+      const {page} = req.params;
+      const numberOfSkipUsers = (page-1)*19;
+  
+      const orders = await OrderModel.find({}).populate('buyer').sort({createdAt:-1}).skip(numberOfSkipUsers).limit(19);
+      
+      res.send({
+        success:true,
+        message:'All orders by pagination number',
+        orders
+      })
+      
+    } catch (error) {
+      res.send({
+        success:false,
+        message: 'Error while getting all orders by pagination!'
+      })
+      console.log(error);
+    }
+  }
+
+
+//   updateOrderStatusController
+const updateOrderStatusController = async(req, res)=>{
+    try {
+        const {orderStatus} = req.body
+        const updatedOrderStatus = await OrderModel.findByIdAndUpdate(req.params.id, {status: orderStatus}, {new:true}).select({password:0, profileImg:0});
+        res.send({
+          success:true,
+          message: 'Order status updated successfully!'
+        })
+      } catch (error) {
+        res.send({
+          success:false,
+          message: 'Something went wrong!'
+        })
+        console.log(error);
+      }
+}
+
+module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController, searchProductController, orderProductController, allOrdersController, allOrdersByPaginationController, updateOrderStatusController}

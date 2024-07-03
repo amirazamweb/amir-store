@@ -18,10 +18,10 @@ const transporter = nodemailer.createTransport({
 });
 
 
-// check old user
-const checkOldUserController = async(req, res)=>{
+// signupOTPController
+const signupOTPController = async(req, res)=>{
    try {
-    const {email} = req.body;
+    const {name, email, generateOTP} = req.body;
         
         const user = await UserModel.findOne({email}).select({password:0, profileImg:0});
         if (user) {
@@ -30,31 +30,26 @@ const checkOldUserController = async(req, res)=>{
               message: 'Email is already registered'
           })
         }
-        res.send({newUser:true})
+
+        // send otp
+        const mailOptions = {
+          from: process.env.SMTP_MAIL,
+          to: email,
+          subject: "Your One-Time Password (OTP) for Verification",
+          html: emailInfo(name, generateOTP)
+        }
+        
+         const info = await transporter.sendMail(mailOptions);
+
+         res.send({
+          success:true,
+          message:'OTP has been sent to your email!'
+         })
+
    } catch (error) {
     res.send("Error checking new user");
     console.log(error);
    }
-}
-
-// otp
-const otpController = async(req, res)=>{
-     try {
-      const {name, email, generateOTP} = req.body;
-       const mailOptions = {
-       from: process.env.SMTP_MAIL,
-       to: email,
-       subject: "Your One-Time Password (OTP) for Verification",
-       html: emailInfo(name, generateOTP)
-     }
-     
-      const info = await transporter.sendMail(mailOptions);
-      res.send('OTP has been sent to your email!')
-
-     } catch (error) {
-        res.send("Error occured sending otp");
-        console.log(error);
-     }
 }
 
 
@@ -193,11 +188,15 @@ const allUserCountController = async(req, res)=>{
 const allUsersByPaginationController = async(req, res)=>{
   try {
     const {uid, page} = req.params;
-    const numberOfSkipUsers = (page-1)*20;
+    const numberOfSkipUsers = (page-1)*19;
 
-    const users = await UserModel.find({_id:{$nin:[uid]}}).select({profileImg:0, password:0, code:0}).skip(numberOfSkipUsers).limit(20);
+    const users = await UserModel.find({_id:{$nin:[uid]}}).select({profileImg:0, password:0, code:0}).sort({createdAt:-1}).skip(numberOfSkipUsers).limit(19);
 
-    res.json(users);
+    res.send({
+      success:true,
+      message:'All users by pagination number',
+      users
+    })
     
   } catch (error) {
     res.send({
@@ -208,4 +207,4 @@ const allUsersByPaginationController = async(req, res)=>{
   }
 }
 
-module.exports = {checkOldUserController, otpController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController};
+module.exports = {signupOTPController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController};

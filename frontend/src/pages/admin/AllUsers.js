@@ -20,7 +20,7 @@ const AllUsers = () => {
     const getAllUsersCountHandler = async()=>{
         try {
         const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/all-user-count/${auth?.user._id}`);
-        const count = Math.ceil((data?.userCount)/20);
+        const count = Math.ceil((data?.userCount)/19);
         setPageCount(count);
         } catch (error) {
             console.log('Something went wrong');
@@ -37,8 +37,10 @@ const AllUsers = () => {
     const getAllUersByPaginationHandler = async(page)=>{
        try {
         const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/all-users/${auth?.user._id}/${page}`);
-        setAllUsers(data);
-        setShowLoader(false);
+        if(data?.success){
+            setAllUsers(data?.users);
+            setShowLoader(false);
+        }
        } catch (error) {
         console.log('Something went wrong');
        }
@@ -85,7 +87,7 @@ const AllUsers = () => {
     <table className='userCustomTable'>
         <thead>
             <tr>
-                <th>S.No</th>
+                <th>User ID</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
@@ -98,7 +100,7 @@ const AllUsers = () => {
                 allUsers.map((user, i)=>{
                     return (
                         <tr key={i}>
-                            <td className='font-bold'>{i+1}</td>
+                            <td>{user?._id.slice(-10)}</td>
                             <td>{user?.name}</td>
                             <td>{user?.email}</td>
                             <td>{user?.role?'Admin':'User'}</td>

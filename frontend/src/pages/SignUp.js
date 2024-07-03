@@ -21,7 +21,7 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isPasswordMatch, setIsPasswordMatch] = useState({msg:'', check:false});
   const [showOtp, setShowOtp] = useState(false);
-  const[otp, setOtp] = useState(null);
+  const [otp, setOtp] = useState('');
   const [auth] = useAuth();
 
   // handle Upload Profile Image
@@ -54,6 +54,8 @@ const SignUp = () => {
 // handle signup
   const handleSignup = async(e)=>{
     e.preventDefault();
+    const generateOTP = Math.floor((Math.random()*900000)+100000);
+    setOtp(generateOTP);
     if(!userData.profileImg){
       return toast.error('Profile image is required!');
     }
@@ -63,24 +65,17 @@ const SignUp = () => {
     }
 
       try {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/check-old-user`, {email:userData.email}); 
+        const {name, email} = userData;
+        const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/signup-otp`, {name, email, generateOTP}); 
 
-        if(res.data.message==='Email is already registered'){
-          return toast.error('Email is already registered');
+        if(data?.success){
+          setShowOtp(true);
+          toast.success(data?.message);
         }
 
-        // generate otp
-      
-        const generateOTP = Math.floor((Math.random()*900000)+100000);
-
-        setOtp(generateOTP);
-
-        const {name, email} = userData;
-
-        const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/otp`, {name, email, generateOTP});
-
-        toast.success(data);
-        setShowOtp(true);
+        else{
+          toast.error(data?.message);
+        }
 
       } catch (error) {
         toast.error('Something went wrong!');
