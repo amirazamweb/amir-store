@@ -147,3 +147,30 @@
     display: none;
   }
 
+
+
+  /* ==========order table================= */
+  .orderTable{
+    margin-top: 10px;
+  }
+
+  .orderTable th{
+    background-color: #FE4938;
+    color: #fff;
+    font-weight: 500;
+    border: 1px solid #dcdde1;
+}
+
+.orderTable th{
+    width:25%;
+}
+
+.orderTable td{
+  text-align: center;
+  font-size: 16px;
+  padding: 0.9px 0;
+  font-weight: 400;
+  border: 1px solid #dcdde1;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+

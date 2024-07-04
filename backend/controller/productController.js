@@ -324,4 +324,23 @@ const updateOrderStatusController = async(req, res)=>{
       }
 }
 
-module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController, searchProductController, orderProductController, allOrdersController, allOrdersByPaginationController, updateOrderStatusController}
+// user order
+const userOrderController = async(req, res)=>{
+    try {
+      const {id} = req.params; 
+      const orders = await OrderModel.find({buyer:id}).sort({createdAt:-1});
+      res.send({
+        success:true,
+        message:'user orders',
+        orders
+      }) 
+    } catch (error) {
+        res.send({
+            success:false,
+            message: 'Error while getting user order'
+          })
+          console.log(error);
+    }
+}
+
+module.exports = {uploadProductController, updateProductController, deleteProductController, totalProductCountController, productPaginationHandler, productCountByCategoryController, categoryListcontroller, productCategoryHandler, singleProductHandler, recommendProductController, searchProductController, orderProductController, allOrdersController, allOrdersByPaginationController, updateOrderStatusController, userOrderController}

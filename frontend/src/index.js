@@ -8,11 +8,13 @@ import { AuthProvider } from './context/auth';
 import { BgProvider } from './context/bg';
 import { CartProvider } from './context/cart';
 import { CartQuantityProvider } from './context/cartQuantityContext';
+import { ResetPasswordWmailProvider } from './context/resetPasswordEmail';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <CartProvider>
+    <ResetPasswordWmailProvider>
     <CartQuantityProvider>
   <AuthProvider>
     <BgProvider>
@@ -20,6 +22,7 @@ root.render(
     </BgProvider>
   </AuthProvider>
   </CartQuantityProvider>
+  </ResetPasswordWmailProvider>
   </CartProvider>
   // </React.StrictMode>
 );

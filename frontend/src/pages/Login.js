@@ -59,7 +59,7 @@ const Login = () => {
         <form className='mt-3' onSubmit={handleLogin}>
           <div>
               <label>Email:</label>
-              <div className='bg-slate-100 p-2'>
+              <div className='bg-slate-100 p-2 mb-2'>
               <input type='email' placeholder='enter email' name='email' required className='w-full outline-none bg-transparent text-slate-500' onChange={handleOnChange}/>
               </div>
 

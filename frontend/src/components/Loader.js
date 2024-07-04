@@ -9,7 +9,7 @@ const Loader = ({redirect}) => {
   useEffect(()=>{
    const id = setInterval(()=>{
     setCount((c)=>c-1)
-   }, 4000)
+   }, 2000)
 
    count===0 && navigate(redirect);
 

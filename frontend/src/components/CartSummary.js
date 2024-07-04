@@ -56,6 +56,7 @@ const CartSummary = () => {
                localStorage.removeItem('amir_store_cart');
                setCart([]);
                toast.success(data?.message);
+               navigate('/');
             }
         } catch (error) {
             console.log(error);

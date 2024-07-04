@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const fs = require('fs'); 
 const resetPasswordOTP = require('../helpers/generateOTPResetPassword');
 const UserModel  = require('../models/userModel');
-const {hashedPassword, comparePassword, createToken} = require('../helpers/authHelper');
+const {hashedPassword} = require('../helpers/authHelper');
 
 dotenv.config();
 
@@ -49,11 +49,46 @@ const resetPasswordOTPController = async(req, res)=>{
            })    
 
     } catch (error) {
-     res.send("Error checking registered user");
+      res.send({
+        success:false,
+        message: "Error checking registered user"
+      });
      console.log(error);
     }
  }
+
+
+//  reset password
+const resetPasswordController = async(req, res)=>{
+  try {
+    const {otp, email, password} = req.body;
+    
+    // check otp
+    const userCode = await UserModel.findOne({email}).select({profileImg:0});
+    if(userCode.code!=otp){
+      return res.send({
+        success:false,
+        message : 'Wrong OTP'
+      })
+    }
+
+    // update new password
+    const updatedUser = await UserModel.updateOne({email}, {password:hashedPassword(password), code:0}).select({profileImg:0});
+
+    res.send({
+      success:true,
+      message : "Password reset successfully"
+    })
+
+  } catch (error) {
+    res.send({
+      success:false,
+      message: "Error while reset password"
+    });
+     console.log(error);
+  }
+}
  
 
 
- module.exports = {resetPasswordOTPController}
+ module.exports = {resetPasswordOTPController, resetPasswordController}

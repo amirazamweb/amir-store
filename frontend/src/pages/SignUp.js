@@ -104,19 +104,19 @@ const SignUp = () => {
           <form className='mt-3' onSubmit={handleSignup}>
             <div>
             <label>Name:</label>
-                <div className='bg-slate-100 p-2'>
+                <div className='bg-slate-100 p-2 mb-2'>
                 <input type='text' placeholder='enter name' name='name' required className='w-full outline-none bg-transparent text-slate-500' onChange={handleOnChange}/>
                 </div>
   
                 <label>Email:</label>
-                <div className='bg-slate-100 p-2'>
+                <div className='bg-slate-100 p-2 mb-2'>
                 <input type='email' placeholder='enter email' name='email' required className='w-full outline-none bg-transparent text-slate-500' onChange={handleOnChange}/>
                 </div>
   
                 <div className='mt-1'></div>
   
                 <label>Password:</label>
-                <div className='bg-slate-100 p-2 flex items-center'>
+                <div className='bg-slate-100 p-2 flex items-center mb-2'>
                 <input type={showPassword? 'text':'password'} placeholder='enter password' name='password' maxLength='10'  required className='w-full outline-none bg-transparent text-slate-500' onChange={handleOnChange}/>
   
                 <div className='cursor-pointer text-slate-600 p-1' onClick={()=>setShowPassword((prev)=>!prev)}>
@@ -134,7 +134,7 @@ const SignUp = () => {
                 </div>
   
               <label>Confirm Password:</label>
-                <div className='bg-slate-100 p-2 flex items-center'>
+                <div className='bg-slate-100 p-2 flex items-center mb-2'>
                 <input type={showConfirmPassword? 'text':'password'} placeholder='enter confirm password' name='confirmpassword' maxLength='10' required className='w-full outline-none bg-transparent text-slate-500' onChange={(e)=>{
                   handleOnChange(e);
                   handleChaeckPasswordMatch(e)

@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom';
+import { useResetEmail } from '../context/resetPasswordEmail';
 
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+  const [resetEmail, setResetEmail] = useResetEmail();
 
   // submitHandler
   const submitHandler = async(e)=>{
@@ -14,7 +18,9 @@ const ForgotPassword = () => {
         const {data} = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/reset-password-otp`,{email, generateOTP});
   
        if(data?.success){
-          toast.success(data?.message)
+          setResetEmail(email);
+          toast.success(data?.message);
+          navigate('/reset-password')
        }
 
        else{
@@ -30,10 +36,10 @@ const ForgotPassword = () => {
 
   return (
     <section>
-        <div className='container mx-auto p-4 pt-[100px]'>
+        <div className='container mx-auto px-4 pt-[50px] md:pt-[70px]'>
            
         <div className='bg-white w-full max-w-sm mx-auto small-dev-p p-5 shadow-md'>
-        <div className='text-xl font-semibold text-center'>Change your password</div>
+        <div className='text-xl font-semibold text-center'>Lost password</div>
           <form className='mt-3' onSubmit={submitHandler}>
             <div>
                 <label>Email:</label>
