@@ -39,7 +39,7 @@ const ForgotPassword = () => {
         <div className='container mx-auto px-4 pt-[50px] md:pt-[70px]'>
            
         <div className='bg-white w-full max-w-sm mx-auto small-dev-p p-5 shadow-md'>
-        <div className='text-xl font-semibold text-center'>Lost password</div>
+        <div className='text-xl font-semibold text-center'>Lost password?</div>
           <form className='mt-3' onSubmit={submitHandler}>
             <div>
                 <label>Email:</label>
@@ -48,7 +48,7 @@ const ForgotPassword = () => {
                 </div>
 
                 <div>
-                    <input type='submit' value='Send email' className='w-fit bg-[#FE4938] text-white px-[22px] py-[7px] mt-3 hover:bg-red-700 cursor-pointer mx-auto block rounded-full'/>
+                    <input type='submit' value='Send OTP' className='w-fit bg-[#FE4938] text-white px-[22px] py-[7px] mt-3 hover:bg-red-700 cursor-pointer mx-auto block rounded-full'/>
                 </div>
             </div>
           </form>

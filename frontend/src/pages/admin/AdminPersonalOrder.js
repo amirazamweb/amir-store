@@ -4,7 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import Spinner from '../../components/Spinner';
 
-const UserOrder = () => {
+const AdminPersonalOrder = () => {
     const [auth] = useAuth();
     const [orderList, setOrderList] = useState([]);
     const [showLoader, setShowLoader] = useState(true);
@@ -15,7 +15,7 @@ const UserOrder = () => {
             const {data} = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/product/user-order/${auth?.user._id}`); 
             if(data?.success){
                 setOrderList(data?.orders);
-                setShowLoader(false)
+                setShowLoader(false);
             }
         } catch (error) {
             console.log(error);
@@ -30,11 +30,11 @@ const UserOrder = () => {
 
   return (
     showLoader?(
-        <Spinner/>
+      <Spinner/>
     ):
     (
-        <div className='px-2 md:px-8 py-3 md:py-6 max-h-[calc(100vh-104px)] h-full overflow-auto relative'>
-    <h1 className='text-md md:text-xl font-semibold text-[#2c2c54]'>My Orders</h1>
+        <div className='px-8 py-6 max-h-[calc(100vh-104px)] h-full overflow-auto relative'>
+    <h1 className='text-xl font-semibold text-[#2c2c54]'>My Orders</h1>
         {
             orderList?.map((order, i)=>{
              return <React.Fragment key={i}>
@@ -59,11 +59,11 @@ const UserOrder = () => {
 
                           {
                                 order?.products?.map((product)=>{
-                                 return <div className='w-full border my-1 h-20 md:h-32 flex'>
-                                    <div className='p-2 h-full w-[25%] md:w-36 border border-t-0 border-l-0 border-r-1 border-b-0'>
+                                 return <div className='w-full border my-1 h-32 flex'>
+                                    <div className='p-2 h-full w-36 border border-t-0 border-l-0 border-r-1 border-b-0'>
                                     <img src={product?.productImage[0]} className='bg-white w-full h-full object-scale-down mix-blend-multiply' alt='cart-image'/>
                                     </div>
-                                    <div className='px-4 py-2 w-[75%] md:w-96 flex flex-col justify-center'>
+                                    <div className='px-4 py-2 max-w-md flex flex-col justify-center'>
                                        <p className='font-semibold text-ellipsis line-clamp-1'>{product?.productName}</p>
                                        <p className='text-slate-500 text-[14.3px] text-ellipsis line-clamp-1'>{product?.brandName}</p>
                                        <p className='text-red-600'>&#8377;{new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0 }).format(product?.sellingPrice)}</p>
@@ -80,4 +80,4 @@ const UserOrder = () => {
   )
 }
 
-export default UserOrder
+export default AdminPersonalOrder

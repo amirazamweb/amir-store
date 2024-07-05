@@ -36,8 +36,8 @@ const UserPanel = () => {
 
   return (
     ok? (
-      <div className='min-h-[calc(100vh-104px)] hidden md:flex'>
-      <aside className='min-h-full w-full max-w-60 bg-white customShadow relative'>
+      <div className='min-h-[calc(100vh-104px)] flex'>
+      <aside className='min-h-full w-full max-w-60 bg-white customShadow relative hidden md:block'>
           <div className='h-40 flex justify-center items-center flex-col gap-[2px] bg-slate-200 adminCustoms'>
               <div>
                   <img src={`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/profile-img/${auth?.user._id}`} alt='profile-img' className='w-16 h-16 rounded-full border border-slate-500'/>

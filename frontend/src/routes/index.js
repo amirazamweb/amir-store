@@ -15,6 +15,7 @@ import SearchProduct from '../pages/SearchProduct';
 import AllOrders from '../pages/admin/AllOrders';
 import ResetPassword from '../pages/ResetPassword';
 import UserOrder from '../pages/user/UserOrder';
+import AdminPersonalOrder from '../pages/admin/AdminPersonalOrder';
 
 const router = createBrowserRouter([
     {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
                     {
                         path:'all-orders',
                         element: <AllOrders/>
+                    },
+                    {
+                        path:'admin-order',
+                        element: <AdminPersonalOrder/>
                     }
                 ]
             },

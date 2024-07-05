@@ -168,9 +168,17 @@
 .orderTable td{
   text-align: center;
   font-size: 16px;
-  padding: 0.9px 0;
+  padding: 0.9px 0.5px;
   font-weight: 400;
   border: 1px solid #dcdde1;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+
+@media (max-width: 768px) {
+  .orderTable th{
+    font-weight: 400;
+    font-size: 14.5px;
+}
 }
 

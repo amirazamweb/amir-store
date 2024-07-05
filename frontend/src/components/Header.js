@@ -45,7 +45,7 @@ const searchHandler = ()=>{
 
           <div>
             {auth?.token?
-            (<img src={`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/profile-img/${auth?.user._id}`} alt='profile-img' className='h-8 w-8 rounded-full cursor-pointer' onClick={()=>navigate(auth?.user.role?'/admin':'user')}/>):
+            (<img src={`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/profile-img/${auth?.user._id}`} alt='profile-img' className='h-8 w-8 rounded-full cursor-pointer' onClick={()=>navigate(auth?.user.role?'/admin/all-orders':'/user/user-order')}/>):
             (<Link to={'/login'} className='px-3 py-1 rounded-full bg-[#FE4938] text-white hover:bg-red-700'>Login</Link>) 
           }       
         </div>

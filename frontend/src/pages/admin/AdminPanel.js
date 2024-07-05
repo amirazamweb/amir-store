@@ -7,7 +7,10 @@ import { FaUsers } from "react-icons/fa6";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { FaCartFlatbedSuitcase } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
+import { FaCartArrowDown } from "react-icons/fa6";
 import toast from 'react-hot-toast'
+import { FiEdit2 } from "react-icons/fi";
+
 
 const AdminPanel = () => {
     const [auth, setAuth] = useAuth();
@@ -46,19 +49,28 @@ const AdminPanel = () => {
     ok?(
       <div className='min-h-[calc(100vh-104px)] hidden md:flex'>
       <aside className='min-h-full w-full max-w-60 bg-white customShadow relative'>
-          <div className='h-40 flex justify-center items-center flex-col gap-[2px] bg-slate-200 adminCustoms'>
+          <div className='h-40 flex justify-center items-center flex-col gap-[2px] bg-slate-200 adminCustoms relative group'>
               <div>
                   <img src={`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/profile-img/${auth?.user._id}`} alt='profile-img' className='w-16 h-16 rounded-full border border-slate-500'/>
               </div>
               <p className='text-[16px] text-[#FE4938] font-semibold text-md'>{auth?.user.name}</p>
               <p className='text-[14px] text-[#130f40] font-semibold'>{auth?.user.role?'Admin':'User'}</p>
+
+              <div className='absolute hidden top-2 right-3 p-2 bg-slate-300 rounded-full text-md text-slate-600 cursor-pointer group-hover:block'>
+              <FiEdit2 />
+              </div>
           </div>
           <div className='pt-4'>
             <nav className='flex flex-col gap-1 px-4'>
               <NavLink to='/admin/all-users' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaUsers /> <span>All Users</span></NavLink>
+
               <NavLink to='/admin/all-products' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><AiFillProduct /><span>All Products</span></NavLink>
-              <NavLink to='/admin/all-orders' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaCartFlatbedSuitcase />
+
+              <NavLink to='/admin/all-orders' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaCartArrowDown />
               <span>All Orders</span></NavLink>
+
+              <NavLink to='/admin/admin-order' className='flex items-center gap-2 bg-slate-100 px-3 py-1'><FaCartFlatbedSuitcase />
+              <span>My Order</span></NavLink>
             </nav>
           </div>
 

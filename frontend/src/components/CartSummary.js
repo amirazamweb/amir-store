@@ -56,7 +56,7 @@ const CartSummary = () => {
                localStorage.removeItem('amir_store_cart');
                setCart([]);
                toast.success(data?.message);
-               navigate('/');
+               navigate(auth?.user.role?'/admin/admin-order':'/user/user-order');
             }
         } catch (error) {
             console.log(error);
