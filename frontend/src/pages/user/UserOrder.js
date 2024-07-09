@@ -36,44 +36,46 @@ const UserOrder = () => {
         <div className='px-2 md:px-8 py-3 md:py-6 max-h-[calc(100vh-104px)] h-full overflow-auto relative'>
     <h1 className='text-md md:text-xl font-semibold text-[#2c2c54]'>My Orders</h1>
         {
-            orderList?.map((order, i)=>{
-             return <React.Fragment key={i}>
-             <table className='orderTable w-full'>
-                        <thead>
-                           <tr>
-                              <th>Order ID</th>
-                              <th>Status</th>
-                              <th>Ordered At</th>
-                              <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className='bg-white'>
-                                <td>{order?._id.slice(-10)}</td>
-                                <td>{order?.status}</td>
-                                <td>{moment(order?.createdAt).fromNow()}</td>
-                                <td>{order?.products?.length}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                          {
-                                order?.products?.map((product)=>{
-                                 return <div className='w-full border my-1 h-20 md:h-32 flex'>
-                                    <div className='p-2 h-full w-[25%] md:w-36 border border-t-0 border-l-0 border-r-1 border-b-0'>
-                                    <img src={product?.productImage[0]} className='bg-white w-full h-full object-scale-down mix-blend-multiply' alt='cart-image'/>
+            orderList.length>0?
+            (orderList?.map((order, i)=>{
+                return <React.Fragment key={i}>
+                <table className='orderTable w-full'>
+                           <thead>
+                              <tr>
+                                 <th>Order ID</th>
+                                 <th>Status</th>
+                                 <th>Ordered At</th>
+                                 <th>Quantity</th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                               <tr className='bg-white'>
+                                   <td>{order?._id.slice(-10)}</td>
+                                   <td>{order?.status}</td>
+                                   <td>{moment(order?.createdAt).fromNow()}</td>
+                                   <td>{order?.products?.length}</td>
+                               </tr>
+                           </tbody>
+                       </table>
+   
+                             {
+                                   order?.products?.map((product)=>{
+                                    return <div className='w-full border my-1 h-20 md:h-32 flex'>
+                                       <div className='p-2 h-full w-[25%] md:w-36 border border-t-0 border-l-0 border-r-1 border-b-0'>
+                                       <img src={product?.productImage[0]} className='bg-white w-full h-full object-scale-down mix-blend-multiply' alt='cart-image'/>
+                                       </div>
+                                       <div className='px-4 py-2 w-[75%] md:w-96 flex flex-col justify-center'>
+                                          <p className='font-semibold text-ellipsis line-clamp-1'>{product?.productName}</p>
+                                          <p className='text-slate-500 text-[14.3px] text-ellipsis line-clamp-1'>{product?.brandName}</p>
+                                          <p className='text-red-600'>&#8377;{new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0 }).format(product?.sellingPrice)}</p>
+                                       </div>
                                     </div>
-                                    <div className='px-4 py-2 w-[75%] md:w-96 flex flex-col justify-center'>
-                                       <p className='font-semibold text-ellipsis line-clamp-1'>{product?.productName}</p>
-                                       <p className='text-slate-500 text-[14.3px] text-ellipsis line-clamp-1'>{product?.brandName}</p>
-                                       <p className='text-red-600'>&#8377;{new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0 }).format(product?.sellingPrice)}</p>
-                                    </div>
-                                 </div>
-                                })
-                            }
-
-                    </React.Fragment>
-            })
+                                   })
+                               }
+   
+                       </React.Fragment>
+               })):
+               (<div className='text-slate-600 mt-2'>You have not ordered yet</div>)
         }
     </div>
     )

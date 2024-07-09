@@ -1,5 +1,22 @@
 const ProductModel = require('../models/productModel');
 const OrderModel = require('../models/orderModel');
+const UserModel = require('../models/userModel');
+const nodemailer = require("nodemailer");
+const dotenv = require('dotenv');
+const orderMail = require('../helpers/orderMail');
+const updateOrderStatusEmail = require('../helpers/updateOrderStatusEmail');
+
+dotenv.config();
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: true, 
+  auth: {
+    user: process.env.SMTP_MAIL,
+    pass: process.env.SMTP_PASSWORD
+  },
+});
 
 // upload product
 const uploadProductController = async(req, res)=>{
@@ -250,6 +267,25 @@ const orderProductController = async(req, res)=>{
         const uploadOrderProduct = new OrderModel(req.body);
         uploadOrderProduct.save();
 
+        const orderNumber = uploadOrderProduct._id.valueOf();
+
+        const user = await UserModel.findById(uploadOrderProduct.buyer).select({name:1, email:1});
+
+        const buyer = user.name;
+
+        const email = user.email;
+
+
+        //  send order mail
+        const mailOptions = {
+            from: process.env.SMTP_MAIL,
+            to: email,
+            subject: `Order Confirmation - ${orderNumber}`,
+            html: orderMail(buyer, orderNumber)
+          }
+          
+           const info = await transporter.sendMail(mailOptions);
+
         res.send({
             success:true,
             message : 'Order placed successfully'
@@ -310,7 +346,32 @@ const allOrdersByPaginationController = async(req, res)=>{
 const updateOrderStatusController = async(req, res)=>{
     try {
         const {orderStatus} = req.body
-        const updatedOrderStatus = await OrderModel.findByIdAndUpdate(req.params.id, {status: orderStatus}, {new:true}).select({password:0, profileImg:0});
+        const updatedOrderStatus = await OrderModel.findByIdAndUpdate(req.params.id, {status: orderStatus}, {new:true});
+    //    start
+        const orderNumber = updatedOrderStatus._id.valueOf();
+        const orderDate =  updatedOrderStatus.createdAt;
+        const status = updatedOrderStatus.status;
+        const user = await UserModel.findById(updatedOrderStatus.buyer).select({name:1, email:1});
+
+        const buyer = user.name;
+
+        const email = user.email;
+
+         const cancelledSubject = `Order Cancellation Notification - ${orderNumber}`;
+         const updatedStatusSubject = `Update on Order Status - ${orderNumber}`
+        //  send order mail
+        const mailOptions = {
+            from: process.env.SMTP_MAIL,
+            to: email,
+            subject: `${status==='Cancelled'?cancelledSubject:updatedStatusSubject }`,
+            html: updateOrderStatusEmail(buyer, orderNumber, orderDate, status)
+          }
+          
+           const info = await transporter.sendMail(mailOptions);
+
+
+        //    end
+
         res.send({
           success:true,
           message: 'Order status updated successfully!'

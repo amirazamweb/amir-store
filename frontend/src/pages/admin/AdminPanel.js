@@ -10,12 +10,15 @@ import { AiFillProduct } from "react-icons/ai";
 import { FaCartArrowDown } from "react-icons/fa6";
 import toast from 'react-hot-toast'
 import { FiEdit2 } from "react-icons/fi";
+import UpdateUserProfile from '../../components/UpadteUserProfile';
+import { useBg } from '../../context/bg';
 
 
 const AdminPanel = () => {
     const [auth, setAuth] = useAuth();
     const [ok, setOk] = useState(false); 
     const navigate = useNavigate();
+    const [bg, setBg] = useBg();
 
     // logout handler
     const logoutHandler = ()=>{
@@ -45,6 +48,11 @@ const AdminPanel = () => {
         auth.token && authCheck();
     }, [auth.token])
 
+    // update Profile Handler
+    const updateProfileHandler = ()=>{
+      setBg({...bg, darkBg: true, updateProfile:true})
+    }
+
   return (
     ok?(
       <div className='min-h-[calc(100vh-104px)] hidden md:flex'>
@@ -56,7 +64,7 @@ const AdminPanel = () => {
               <p className='text-[16px] text-[#FE4938] font-semibold text-md'>{auth?.user.name}</p>
               <p className='text-[14px] text-[#130f40] font-semibold'>{auth?.user.role?'Admin':'User'}</p>
 
-              <div className='absolute hidden top-2 right-3 p-2 bg-slate-300 rounded-full text-md text-slate-600 cursor-pointer group-hover:block'>
+              <div className='absolute hidden top-2 right-3 p-2 bg-slate-300 rounded-full text-md text-slate-600 cursor-pointer group-hover:block' onClick={updateProfileHandler}>
               <FiEdit2 />
               </div>
           </div>
@@ -83,6 +91,9 @@ const AdminPanel = () => {
       <main className='w-full relative'>
          <Outlet/>
       </main>
+
+      {bg?.updateProfile && <UpdateUserProfile/>}
+
   </div>
   ):
   (<Loader redirect={auth.token?'/':'/login'}/>)

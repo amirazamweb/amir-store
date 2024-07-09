@@ -34,7 +34,7 @@ const Login = () => {
           toast.success(data.message);
           localStorage.setItem('amir_store_auth', JSON.stringify({user:data.user, token:data.token}));
           setAuth({...auth, user:data.user, token:data.token});
-          navigate(data?.user.role?'/admin':'/user');
+          navigate(data?.user.role?'/admin/all-orders':'/user/user-order');
         }
         else{
           toast.error(data.message);

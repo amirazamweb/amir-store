@@ -1,22 +1,33 @@
-import React, { useState } from 'react'
+import React, {useState } from 'react'
 import { CiSearch } from "react-icons/ci";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assest/logo.png'
 import { useAuth } from '../context/auth';
 import { useCart } from '../context/cart';
+import toast from 'react-hot-toast';
 
 
 const Header = () => {
-const [auth] = useAuth();
+const [auth, setAuth] = useAuth();
 const navigate = useNavigate();
 const[cart] = useCart();
 const [searchData, setSearchData] = useState('');
+const [showMobileLogoutBtn, setShowMobileLogoutBtn] = useState(false);
 
 // serch handler
 const searchHandler = ()=>{
   navigate(`/search?query=${searchData}`);
   setSearchData('');
+}
+
+
+// mobileLogoutHandler
+const mobileLogoutHandler = ()=>{
+  localStorage.removeItem('amir_store_auth')
+  setAuth({ user: null, token: '' });
+  toast.success('User logout successfully!');
+  navigate('/login');
 }
 
 
@@ -45,7 +56,12 @@ const searchHandler = ()=>{
 
           <div>
             {auth?.token?
-            (<img src={`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/profile-img/${auth?.user._id}`} alt='profile-img' className='h-8 w-8 rounded-full cursor-pointer' onClick={()=>navigate(auth?.user.role?'/admin/all-orders':'/user/user-order')}/>):
+            (<div className='relatiev' onClick={()=>setShowMobileLogoutBtn((val)=>!val)}>
+             <img src={`${process.env.REACT_APP_SERVER_DOMAIN}/api/v1/auth/profile-img/${auth?.user._id}`} alt='profile-img' className='h-8 w-8 rounded-full cursor-pointer' onClick={()=>navigate(auth?.user.role?'/admin/all-orders':'/user/user-order')}/>
+
+             {showMobileLogoutBtn && <button className='absolute bg-red-500 text-sm text-white px-1 py-0 top-14 right-2 md:hidden' onClick={mobileLogoutHandler}>Logout</button>}
+              
+            </div>):
             (<Link to={'/login'} className='px-3 py-1 rounded-full bg-[#FE4938] text-white hover:bg-red-700'>Login</Link>) 
           }       
         </div>

@@ -172,7 +172,7 @@ const allUserCountController = async(req, res)=>{
   try {
     const users = await UserModel.find({_id:{$nin:[req.params.uid]}}).select({profileImg:0, password:0, code:0});
     res.send({
-      sucess:true,
+      success:true,
       userCount:users.length
     })
   } catch (error) {
@@ -207,4 +207,36 @@ const allUsersByPaginationController = async(req, res)=>{
   }
 }
 
-module.exports = {signupOTPController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController};
+// updateProfileController
+const updateProfileController = async(req, res)=>{
+     try {
+      const {name, email} = req.fields;
+      const {profileImg} = req.files;
+
+      if(profileImg){
+        const bufferData = fs.readFileSync(profileImg.path);
+        const updatedUser = await UserModel.findOneAndUpdate({email}, {profileImg:{data:bufferData, contentType: profileImg.type}, name}, {returnOriginal:false}).select({profileImg:0});
+        res.send({
+          success: true,
+          message: 'Profile updated successfully',
+          updatedUser
+        })
+      }
+      else{
+        const updatedUser = await UserModel.findOneAndUpdate({email}, {name}, {returnOriginal:false}).select({profileImg:0});
+        res.send({
+          success: true,
+          message: 'Profile updated successfully',
+          updatedUser
+        })
+      }
+     } catch (error) {
+      res.send({
+        success:false,
+        message: 'Error while updating the profile'
+      })
+      console.log(error);
+     }
+}
+
+module.exports = {signupOTPController, signupController, loginController, profileImageController, allUsersController, updateRoleController, allUserCountController, allUsersByPaginationController, updateProfileController};

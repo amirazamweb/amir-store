@@ -19,6 +19,10 @@ app.use(express.json());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/product', productRouter);
 
+app.get('/', (req, res)=>{
+   res.send('<h2>Welcome to Amir Store</h2>')
+})
+
 const PORT = 8080 || process.env.PORT
 
 connectDB();
