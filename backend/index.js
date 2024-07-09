@@ -23,7 +23,7 @@ app.get('/', (req, res)=>{
    res.send('<h2>Welcome to Amir Store</h2>')
 })
 
-const PORT = 8080 || process.env.PORT
+const PORT = process.env.PORT || 8080 
 
 connectDB();
 
